@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bikash Timilsena - Voice for Change</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #1a5276;
+      --secondary: #2e86c1;
+      --accent: #e74c3c;
+      --light: #f8f9fa;
+      --dark: #2c3e50;
+      --success: #27ae60;
+      --warning: #f39c12;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 30px 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.05"><text x="50%" y="50%" font-size="12" text-anchor="middle" fill="white" dominant-baseline="middle">TRUTH • JUSTICE • REFORM</text></svg>');
+      opacity: 0.1;
+    }
+    
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .profile-img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 4px solid white;
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-img:hover {
+      transform: scale(1.03);
+    }
+    
+    .header-text h1 {
+      margin: 20px 0 10px;
+      font-size: 2.8rem;
+      cursor: pointer;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .tagline {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-weight: 300;
+    }
+    
+    .mission-statement {
+      background: rgba(0,0,0,0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      max-width: 800px;
+      font-style: italic;
+    }
+    
+    /* Navigation */
+    nav {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: center;
+    }
+    
+    .nav-menu {
+      display: flex;
+      list-style: none;
+    }
+    
+    .nav-menu li {
+      padding: 15px 25px;
+    }
+    
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+    
+    .nav-menu a:hover {
+      color: var(--primary);
+    }
+    
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--primary);
+      transition: width 0.3s;
+    }
+    
+    .nav-menu a:hover::after {
+      width: 100%;
+    }
+    
+    /* Section Styles */
+    section {
+      padding: 60px 0;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+      color: var(--primary);
+      position: relative;
+      font-size: 2.2rem;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+    }
+    
+    /* About Section */
+    #about {
+      background: white;
+    }
+    
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+    
+    .about-text p {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+    }
+    
+    .about-image {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+    
+    .about-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s;
+    }
+    
+    .about-image:hover img {
+      transform: scale(1.05);
+    }
+    
+    /* Posts Section */
+    #posts {
+      background: #f5f5f5;
+    }
+    
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+    }
+    
+    .post {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .post:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+    
+    .post-image-container {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+    }
+    
+    .post-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+    
+    .post:hover .post-image {
+      transform: scale(1.05);
+    }
+    
+    .post-content {
+      padding: 25px;
+    }
+    
+    .post-title {
+      margin-bottom: 15px;
+      font-size: 1.4rem;
+    }
+    
+    .post-date {
+      color: #777;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+    
+    .post-excerpt {
+      margin-bottom: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .post-full-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    
+    .post-expanded .post-full-content {
+      max-height: 1000px;
+    }
+    
+    .read-more {
+      display: inline-block;
+      padding: 8px 20px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 500;
+      transition: background 0.3s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+    }
+    
+    .read-more:hover {
+      background: var(--secondary);
+    }
+    
+    /* Comments Section */
+    #comments {
+      background: white;
+    }
+    
+    .comments-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    /* Social Media Section */
+    .socials {
+      background: var(--light);
+      text-align: center;
+    }
+    
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 20px;
+    }
+    
+    .social-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      transition: transform 0.3s, background 0.3s;
+      text-decoration: none;
+    }
+    
+    .social-icon:hover {
+      transform: translateY(-5px);
+      background: var(--secondary);
+    }
+    
+    /* Admin Panel */
+    #adminPanel {
+      display: none;
+      background: #222;
+      color: white;
+      padding: 40px;
+      margin: 40px 0;
+      border-radius: 10px;
+    }
+    
+    .admin-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    
+    .admin-form {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .color-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.2s;
+    }
+    
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+    
+    .color-option.selected {
+      border-color: white;
+      transform: scale(1.1);
+    }
+    
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: var(--secondary);
+    }
+    
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    
+    .btn-success:hover {
+      background: #2ecc71;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+    }
+    
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .footer-logo {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 25px;
+      margin: 20px 0;
+    }
+    
+    .footer-links a {
+      color: #ddd;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: white;
+    }
+    
+    .copyright {
+      margin-top: 20px;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .about-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .posts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-text h1 {
+        font-size: 2.2rem;
+      }
+      
+      .nav-menu {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .posts-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .social-icons {
+        flex-wrap: wrap;
+      }
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .fade-in {
+      animation: fadeIn 1s ease forwards;
+    }
+    
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <div class="container header-content">
+      <img src="your-photo.jpg" alt="Bikash Timilsena" class="profile-img fade-in">
+      <div class="header-text fade-in delay-1">
+        <h1 id="name">Bikash Timilsena</h1>
+        <p class="tagline">Voice for Change in Nepal</p>
+      </div>
+      <div class="mission-statement fade-in delay-2">
+        <p>"Exposing corruption, advocating for transparency, and working toward a better future for all Nepali people."</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="container nav-container">
+      <ul class="nav-menu">
+        <li><a href="#about">About</a></li>
+        <li><a href="#posts">Exposés</a></li>
+        <li><a href="#comments">Join Discussion</a></li>
+        <li><a href="#contact">Get Involved</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- About Section -->
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title">About The Movement</h2>
+      <div class="about-content">
+        <div class="about-text">
+          <p>I am Bikash Timilsena, a concerned citizen dedicated to fighting corruption and injustice in Nepal. This platform serves to expose corruption at all levels and advocate for systemic change.</p>
+          <p>Through investigative journalism and citizen engagement, we're building a movement that will eventually lead to a political transformation in our country. Our goal is to create a Nepal where leaders are accountable, institutions are transparent, and citizens are empowered.</p>
+          <p>While I'm not currently a candidate for any office, this movement lays the groundwork for future political change. Join us in this journey toward a more just and equitable Nepal.</p>
+        </div>
+        <div class="about-image">
+          <img src="https://placehold.co/600x400/1a5276/ffffff?text=Movement+For+Change" alt="Bikash Timilsena speaking">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Posts Section -->
+  <section id="posts">
+    <div class="container">
+      <h2 class="section-title">Corruption Exposés</h2>
+      <div class="posts-grid" id="postsContainer">
+        <!-- Posts will be dynamically added here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Comments Section -->
+  <section id="comments">
+    <div class="container">
+      <h2 class="section-title">Join The Discussion</h2>
+      <div class="comments-container">
+        <!-- Giscus Comment System -->
+        <script src="https://giscus.app/client.js"
+            data-repo="your-github-username/your-repo"
+            data-repo-id="YOUR_REPO_ID"
+            data-category="General"
+            data-category-id="YOUR_CATEGORY_ID"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="top"
+            data-theme="light"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Media Section -->
+  <section class="socials" id="contact">
+    <div class="container">
+      <h2 class="section-title">Connect With Us</h2>
+      <div class="social-icons">
+        <a href="https://facebook.com/" target="_blank" class="social-icon">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://twitter.com/" target="_blank" class="social-icon">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://instagram.com/" target="_blank" class="social-icon">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://youtube.com/" target="_blank" class="social-icon">
+          <i class="fab fa-youtube"></i>
+        </a>
+        <a href="https://linkedin.com/" target="_blank" class="social-icon">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Panel -->
+  <section id="adminPanel">
+    <div class="container">
+      <h2 class="admin-title">Admin Dashboard</h2>
+      <div class="admin-form">
+        <div class="form-group">
+          <label for="postTitle">Post Title</label>
+          <input type="text" id="postTitle" class="form-control" placeholder="Enter post title">
+        </div>
+        
+        <div class="form-group">
+          <label for="postContent">Post Content</label>
+          <textarea id="postContent" class="form-control" placeholder="Enter post content"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="postImage">Image URL</label>
+          <input type="text" id="postImage" class="form-control" placeholder="Enter image URL">
+        </div>
+        
+        <div class="form-group">
+          <label>Title Color</label>
+          <div class="color-options">
+            <div class="color-option selected" style="background-color: #1a5276;" data-color="#1a5276"></div>
+            <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
+            <div class="color-option" style="background-color: #27ae60;" data-color="#27ae60"></div>
+            <div class="color-option" style="background-color: #f39c12;" data-color="#f39c12"></div>
+            <div class="color-option" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
+            <div class="color-option" style="background-color: #2c3e50;" data-color="#2c3e50"></div>
+          </div>
+          <input type="hidden" id="titleColor" value="#1a5276">
+        </div>
+        
+        <button onclick="addPost()" class="btn btn-primary">Publish Post</button>
+        <button onclick="clearForm()" class="btn">Clear Form</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-logo">Bikash Timilsena</div>
+      <p>Transparency • Accountability • Reform</p>
+      
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#posts">Exposés</a>
+        <a href="#comments">Discussion</a>
+        <a href="#contact">Get Involved</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+      
+      <p class="copyright">&copy; 2025 Bikash Timilsena. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Admin functionality
+    let clickCount = 0;
+    const nameElement = document.getElementById("name");
+    const adminPanel = document.getElementById("adminPanel");
+    let selectedColor = "#1a5276";
+
+    // Color selection
+    const colorOptions = document.querySelectorAll('.color-option');
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove selected class from all options
+        colorOptions.forEach(opt => opt.classList.remove('selected'));
+        
+        // Add selected class to clicked option
+        option.classList.add('selected');
+        
+        // Update selected color
+        selectedColor = option.getAttribute('data-color');
+        document.getElementById('titleColor').value = selectedColor;
+      });
+    });
+
+    // Activate admin panel
+    nameElement.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount >= 5) {
+        const password = prompt("Enter Admin Password:");
+        if (password === "bikashdaimugiho") {
+          adminPanel.style.display = 'block';
+          alert("✅ Admin Mode Activated!");
+          window.scrollTo({ top: document.getElementById('adminPanel').offsetTop, behavior: 'smooth' });
+        } else {
+          alert("❌ Wrong Password!");
+        }
+        clickCount = 0;
+      }
+    });
+
+    // Toggle post expansion
+    function togglePost(postId) {
+      const post = document.getElementById(postId);
+      post.classList.toggle('post-expanded');
+      
+      const button = post.querySelector('.read-more');
+      if (post.classList.contains('post-expanded')) {
+        button.textContent = 'Read Less';
+      } else {
+        button.textContent = 'Read Full Story';
+      }
+    }
+
+    // Add new post
+    function addPost() {
+      const title = document.getElementById('postTitle').value;
+      const content = document.getElementById('postContent').value;
+      const imageUrl = document.getElementById('postImage').value;
+      const color = document.getElementById('titleColor').value;
+
+      if (!title || !content) {
+        alert("Please enter title and content.");
+        return;
+      }
+
+      const postId = 'post-' + Date.now();
+      
+      const postElement = document.createElement('div');
+      postElement.classList.add('post', 'fade-in');
+      postElement.id = postId;
+      
+      // Format current date
+      const currentDate = new Date();
+      const formattedDate = currentDate.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      postElement.innerHTML = `
+        <div class="post-image-container">
+          <img src="${imageUrl || 'https://placehold.co/600x400/1a5276/ffffff?text=News+Update'}" alt="${title}" class="post-image">
+        </div>
+        <div class="post-content">
+          <h3 class="post-title" style="color: ${color}">${title}</h3>
+          <span class="post-date">${formattedDate}</span>
+          <p class="post-excerpt">${content.substring(0, 150)}...</p>
+          <div class="post-full-content">
+            <p>${content}</p>
+          </div>
+          <button class="read-more" onclick="togglePost('${postId}')">Read Full Story</button>
+        </div>
+      `;
+
+      document.getElementById('postsContainer').prepend(postElement);
+      clearForm();
+      
+      alert("Post published successfully!");
+    }
+
+    // Clear form
+    function clearForm() {
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postContent').value = '';
+      document.getElementById('postImage').value = '';
+      
+      // Reset color selection to default
+      colorOptions.forEach(opt => opt.classList.remove('selected'));
+      document.querySelector('.color-option[data-color="#1a5276"]').classList.add('selected');
+      document.getElementById('titleColor').value = '#1a5276';
+      selectedColor = '#1a5276';
+    }
+
+    // Add some sample posts on initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      const samplePosts = [
+        {
+          title: "Exposing Corruption in Infrastructure Projects",
+          content: "New evidence reveals how officials have been siphoning funds from critical infrastructure projects. We've obtained documents showing how at least 40% of allocated funds for road construction in rural areas have been diverted to private accounts. The evidence points to a network of officials and contractors working together to exploit development budgets. We demand a full investigation and accountability for those responsible. This is just one example of the systemic corruption that plagues our nation's development initiatives.",
+          image: "https://placehold.co/600x400/e74c3c/ffffff?text=Corruption+Exposé",
+          color: "#e74c3c",
+          date: "May 15, 2025"
+        },
+        {
+          title: "Our Vision for Education Reform",
+          content: "Education is the foundation of our future. Our comprehensive plan will ensure every Nepali child has access to quality education, regardless of their background. We propose: 1) Increasing education budget allocation to 20% of national budget, 2) Teacher training programs focused on modern pedagogy, 3) Technology integration in all public schools, 4) Scholarship programs for disadvantaged students, and 5) Curriculum reform to include critical thinking and civic education. These changes will require political will and citizen support to implement effectively.",
+          image: "https://placehold.co/600x400/27ae60/ffffff?text=Education+Reform",
+          color: "#27ae60",
+          date: "May 10, 2025"
+        }
+      ];
+
+      samplePosts.forEach((post, index) => {
+        const postId = 'sample-post-' + index;
+        
+        const postElement = document.createElement('div');
+        postElement.classList.add('post');
+        postElement.id = postId;
+        
+        postElement.innerHTML = `
+          <div class="post-image-container">
+            <img src="${post.image}" alt="${post.title}" class="post-image">
+          </div>
+          <div class="post-content">
+            <h3 class="post-title" style="color: ${post.color}">${post.title}</h3>
+            <span class="post-date">${post.date}</span>
+            <p class="post-excerpt">${post.content.substring(0, 150)}...</p>
+            <div class="post-full-content">
+              <p>${post.content}</p>
+            </div>
+            <button class="read-more" onclick="togglePost('${postId}')">Read Full Story</button>
+          </div>
+        `;
+
+        document.getElementById('postsContainer').appendChild(postElement);
+      });
+    });
+  </script>
+</body>
+</html>
