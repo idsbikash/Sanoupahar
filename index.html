@@ -484,6 +484,73 @@
       font-size: 0.9rem;
     }
     
+    /* Admin Access Button */
+    .admin-access-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    .admin-access-btn:hover {
+      transform: scale(1.1);
+      background: #c0392b;
+    }
+    
+    /* Admin Login Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    }
+    
+    .modal-header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .modal-header h2 {
+      color: var(--primary);
+    }
+    
+    .modal-body {
+      margin-bottom: 20px;
+    }
+    
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    
     /* Responsive Design */
     @media (max-width: 992px) {
       .about-content {
@@ -530,10 +597,35 @@
   </style>
 </head>
 <body>
+  <!-- Admin Access Button -->
+  <div class="admin-access-btn" id="adminAccessButton">
+    <i class="fas fa-lock"></i>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal" id="adminLoginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Admin Access</h2>
+        <p>Enter password to access admin panel</p>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password">
+        </div>
+        <p id="loginError" style="color: #e74c3c; display: none;">Incorrect password. Please try again.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="loginToAdmin()">Login</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Header Section -->
   <header>
     <div class="container header-content">
-      <img src="your-photo.jpg" alt="Bikash Timilsena" class="profile-img fade-in">
+      <img src="https://placehold.co/180x180/1a5276/ffffff?text=B" alt="Bikash Timilsena" class="profile-img fade-in">
       <div class="header-text fade-in delay-1">
         <h1 id="name">Bikash Timilsena</h1>
         <p class="tagline">Voice for Change in Nepal</p>
@@ -692,9 +784,12 @@
 
   <script>
     // Admin functionality
-    let clickCount = 0;
     const nameElement = document.getElementById("name");
     const adminPanel = document.getElementById("adminPanel");
+    const adminAccessButton = document.getElementById("adminAccessButton");
+    const adminLoginModal = document.getElementById("adminLoginModal");
+    const adminPasswordInput = document.getElementById("adminPassword");
+    const loginError = document.getElementById("loginError");
     let selectedColor = "#1a5276";
 
     // Color selection
@@ -713,19 +808,53 @@
       });
     });
 
-    // Activate admin panel
-    nameElement.addEventListener('click', () => {
-      clickCount++;
-      if (clickCount >= 5) {
-        const password = prompt("Enter Admin Password:");
-        if (password === "bikashdaimugiho") {
-          adminPanel.style.display = 'block';
-          alert("✅ Admin Mode Activated!");
-          window.scrollTo({ top: document.getElementById('adminPanel').offsetTop, behavior: 'smooth' });
-        } else {
-          alert("❌ Wrong Password!");
-        }
-        clickCount = 0;
+    // Show admin login modal
+    adminAccessButton.addEventListener('click', () => {
+      adminLoginModal.style.display = 'flex';
+      adminPasswordInput.focus();
+    });
+
+    // Close modal
+    function closeModal() {
+      adminLoginModal.style.display = 'none';
+      loginError.style.display = 'none';
+      adminPasswordInput.value = '';
+    }
+
+    // Login to admin
+    function loginToAdmin() {
+      const password = adminPasswordInput.value;
+      
+      if (password === "bikashdaimugiho") {
+        adminPanel.style.display = 'block';
+        adminLoginModal.style.display = 'none';
+        adminPasswordInput.value = '';
+        loginError.style.display = 'none';
+        
+        // Scroll to admin panel
+        window.scrollTo({
+          top: adminPanel.offsetTop - 20,
+          behavior: 'smooth'
+        });
+        
+        alert("Admin access granted!");
+      } else {
+        loginError.style.display = 'block';
+        adminPasswordInput.focus();
+      }
+    }
+
+    // Close modal if clicked outside
+    window.addEventListener('click', (e) => {
+      if (e.target === adminLoginModal) {
+        closeModal();
+      }
+    });
+
+    // Allow Enter key to submit login form
+    adminPasswordInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        loginToAdmin();
       }
     });
 
@@ -821,7 +950,7 @@
         }
       ];
 
-      samplePosts.forEach((post, index) => 
+      samplePosts.forEach((post, index) => {
         const postId = 'sample-post-' + index;
         
         const postElement = document.createElement('div');
