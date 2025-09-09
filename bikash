@@ -821,7 +821,7 @@
         }
       ];
 
-      samplePosts.forEach((post, index) => {
+      samplePosts.forEach((post, index) => 
         const postId = 'sample-post-' + index;
         
         const postElement = document.createElement('div');
