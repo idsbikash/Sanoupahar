@@ -226,6 +226,7 @@
       overflow: hidden;
       box-shadow: 0 5px 15px rgba(0,0,0,0.08);
       transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
     }
     
     .post:hover {
@@ -284,6 +285,12 @@
       max-height: 1000px;
     }
     
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+    
     .read-more {
       display: inline-block;
       padding: 8px 20px;
@@ -301,6 +308,25 @@
     
     .read-more:hover {
       background: var(--secondary);
+    }
+    
+    .delete-post {
+      display: inline-block;
+      padding: 8px 15px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 500;
+      transition: background 0.3s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: inherit;
+    }
+    
+    .delete-post:hover {
+      background: #c0392b;
     }
     
     /* Comments Section */
@@ -579,6 +605,11 @@
       .social-icons {
         flex-wrap: wrap;
       }
+      
+      .post-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
     
     /* Animations */
@@ -791,6 +822,7 @@
     const adminPasswordInput = document.getElementById("adminPassword");
     const loginError = document.getElementById("loginError");
     let selectedColor = "#1a5276";
+    let isAdmin = false;
 
     // Color selection
     const colorOptions = document.querySelectorAll('.color-option');
@@ -826,10 +858,16 @@
       const password = adminPasswordInput.value;
       
       if (password === "bikashdaimugiho") {
+        isAdmin = true;
         adminPanel.style.display = 'block';
         adminLoginModal.style.display = 'none';
         adminPasswordInput.value = '';
         loginError.style.display = 'none';
+        
+        // Show delete buttons on all posts
+        document.querySelectorAll('.delete-post').forEach(btn => {
+          btn.style.display = 'inline-block';
+        });
         
         // Scroll to admin panel
         window.scrollTo({
@@ -871,6 +909,21 @@
       }
     }
 
+    // Delete post
+    function deletePost(postId) {
+      if (confirm("Are you sure you want to delete this post?")) {
+        const postElement = document.getElementById(postId);
+        postElement.remove();
+        
+        // Remove from localStorage
+        const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+        const updatedPosts = posts.filter(post => post.id !== postId);
+        localStorage.setItem('posts', JSON.stringify(updatedPosts));
+        
+        alert("Post deleted successfully!");
+      }
+    }
+
     // Add new post
     function addPost() {
       const title = document.getElementById('postTitle').value;
@@ -908,13 +961,28 @@
           <div class="post-full-content">
             <p>${content}</p>
           </div>
-          <button class="read-more" onclick="togglePost('${postId}')">Read Full Story</button>
+          <div class="post-actions">
+            <button class="read-more" onclick="togglePost('${postId}')">Read Full Story</button>
+            <button class="delete-post" onclick="deletePost('${postId}')" style="display: ${isAdmin ? 'inline-block' : 'none'}">Delete Post</button>
+          </div>
         </div>
       `;
 
       document.getElementById('postsContainer').prepend(postElement);
-      clearForm();
       
+      // Save to localStorage
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      posts.unshift({
+        id: postId,
+        title,
+        content,
+        imageUrl: imageUrl || 'https://placehold.co/600x400/1a5276/ffffff?text=News+Update',
+        color,
+        date: formattedDate
+      });
+      localStorage.setItem('posts', JSON.stringify(posts));
+      
+      clearForm();
       alert("Post published successfully!");
     }
 
@@ -931,49 +999,95 @@
       selectedColor = '#1a5276';
     }
 
-    // Add some sample posts on initial load
-    window.addEventListener('DOMContentLoaded', () => {
-      const samplePosts = [
-        {
-          title: "Exposing Corruption in Infrastructure Projects",
-          content: "New evidence reveals how officials have been siphoning funds from critical infrastructure projects. We've obtained documents showing how at least 40% of allocated funds for road construction in rural areas have been diverted to private accounts. The evidence points to a network of officials and contractors working together to exploit development budgets. We demand a full investigation and accountability for those responsible. This is just one example of the systemic corruption that plagues our nation's development initiatives.",
-          image: "https://placehold.co/600x400/e74c3c/ffffff?text=Corruption+Exposé",
-          color: "#e74c3c",
-          date: "May 15, 2025"
-        },
-        {
-          title: "Our Vision for Education Reform",
-          content: "Education is the foundation of our future. Our comprehensive plan will ensure every Nepali child has access to quality education, regardless of their background. We propose: 1) Increasing education budget allocation to 20% of national budget, 2) Teacher training programs focused on modern pedagogy, 3) Technology integration in all public schools, 4) Scholarship programs for disadvantaged students, and 5) Curriculum reform to include critical thinking and civic education. These changes will require political will and citizen support to implement effectively.",
-          image: "https://placehold.co/600x400/27ae60/ffffff?text=Education+Reform",
-          color: "#27ae60",
-          date: "May 10, 2025"
-        }
-      ];
-
-      samplePosts.forEach((post, index) => {
-        const postId = 'sample-post-' + index;
+    // Load posts from localStorage
+    function loadPosts() {
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      const postsContainer = document.getElementById('postsContainer');
+      
+      postsContainer.innerHTML = '';
+      
+      if (posts.length === 0) {
+        // Add sample posts if no posts exist
+        const samplePosts = [
+          {
+            id: 'sample-post-1',
+            title: "Exposing Corruption in Infrastructure Projects",
+            content: "New evidence reveals how officials have been siphoning funds from critical infrastructure projects. We've obtained documents showing how at least 40% of allocated funds for road construction in rural areas have been diverted to private accounts. The evidence points to a network of officials and contractors working together to exploit development budgets. We demand a full investigation and accountability for those responsible. This is just one example of the systemic corruption that plagues our nation's development initiatives.",
+            imageUrl: "https://placehold.co/600x400/e74c3c/ffffff?text=Corruption+Exposé",
+            color: "#e74c3c",
+            date: "May 15, 2025"
+          },
+          {
+            id: 'sample-post-2',
+            title: "Our Vision for Education Reform",
+            content: "Education is the foundation of our future. Our comprehensive plan will ensure every Nepali child has access to quality education, regardless of their background. We propose: 1) Increasing education budget allocation to 20% of national budget, 2) Teacher training programs focused on modern pedagogy, 3) Technology integration in all public schools, 4) Scholarship programs for disadvantaged students, and 5) Curriculum reform to include critical thinking and civic education. These changes will require political will and citizen support to implement effectively.",
+            imageUrl: "https://placehold.co/600x400/27ae60/ffffff?text=Education+Reform",
+            color: "#27ae60",
+            date: "May 10, 2025"
+          }
+        ];
         
-        const postElement = document.createElement('div');
-        postElement.classList.add('post');
-        postElement.id = postId;
-        
-        postElement.innerHTML = `
-          <div class="post-image-container">
-            <img src="${post.image}" alt="${post.title}" class="post-image">
-          </div>
-          <div class="post-content">
-            <h3 class="post-title" style="color: ${post.color}">${post.title}</h3>
-            <span class="post-date">${post.date}</span>
-            <p class="post-excerpt">${post.content.substring(0, 150)}...</p>
-            <div class="post-full-content">
-              <p>${post.content}</p>
+        samplePosts.forEach(post => {
+          const postElement = document.createElement('div');
+          postElement.classList.add('post');
+          postElement.id = post.id;
+          
+          postElement.innerHTML = `
+            <div class="post-image-container">
+              <img src="${post.imageUrl}" alt="${post.title}" class="post-image">
             </div>
-            <button class="read-more" onclick="togglePost('${postId}')">Read Full Story</button>
-          </div>
-        `;
+            <div class="post-content">
+              <h3 class="post-title" style="color: ${post.color}">${post.title}</h3>
+              <span class="post-date">${post.date}</span>
+              <p class="post-excerpt">${post.content.substring(0, 150)}...</p>
+              <div class="post-full-content">
+                <p>${post.content}</p>
+              </div>
+              <div class="post-actions">
+                <button class="read-more" onclick="togglePost('${post.id}')">Read Full Story</button>
+                <button class="delete-post" onclick="deletePost('${post.id}')" style="display: ${isAdmin ? 'inline-block' : 'none'}">Delete Post</button>
+              </div>
+            </div>
+          `;
 
-        document.getElementById('postsContainer').appendChild(postElement);
-      });
+          postsContainer.appendChild(postElement);
+        });
+        
+        // Save sample posts to localStorage
+        localStorage.setItem('posts', JSON.stringify(samplePosts));
+      } else {
+        // Load posts from localStorage
+        posts.forEach(post => {
+          const postElement = document.createElement('div');
+          postElement.classList.add('post');
+          postElement.id = post.id;
+          
+          postElement.innerHTML = `
+            <div class="post-image-container">
+              <img src="${post.imageUrl}" alt="${post.title}" class="post-image">
+            </div>
+            <div class="post-content">
+              <h3 class="post-title" style="color: ${post.color}">${post.title}</h3>
+              <span class="post-date">${post.date}</span>
+              <p class="post-excerpt">${post.content.substring(0, 150)}...</p>
+              <div class="post-full-content">
+                <p>${post.content}</p>
+              </div>
+              <div class="post-actions">
+                <button class="read-more" onclick="togglePost('${post.id}')">Read Full Story</button>
+                <button class="delete-post" onclick="deletePost('${post.id}')" style="display: ${isAdmin ? 'inline-block' : 'none'}">Delete Post</button>
+              </div>
+            </div>
+          `;
+
+          postsContainer.appendChild(postElement);
+        });
+      }
+    }
+
+    // Initialize the page
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPosts();
     });
   </script>
 </body>
