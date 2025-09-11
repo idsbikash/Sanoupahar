@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Puzzle Game</title>
+    <title>Personalized Tic-Tac-Toe</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,30 +14,34 @@
         }
         
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: #fff;
             line-height: 1.6;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 500px;
+            width: 100%;
             background: rgba(0, 0, 0, 0.7);
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            position: relative;
         }
         
         header {
-            text-align: center;
-            padding: 20px 0;
             margin-bottom: 30px;
         }
         
         header h1 {
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             margin-bottom: 10px;
             text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
             color: #ffcc00;
@@ -45,57 +49,40 @@
         
         header p {
             font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto;
             color: #e0e0e0;
         }
         
-        .upload-section {
+        .player-setup {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 40px;
-            backdrop-filter: blur(10px);
-            border: 2px dashed rgba(255, 255, 255, 0.3);
+            padding: 20px;
+            margin-bottom: 25px;
         }
         
-        .upload-section h2 {
-            font-size: 2rem;
+        .form-group {
             margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
             color: #ffcc00;
         }
         
-        .upload-area {
-            border: 3px dashed #6a11cb;
-            border-radius: 12px;
-            padding: 40px;
-            margin: 20px auto;
-            max-width: 500px;
-            background: rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .upload-area:hover {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: #2575fc;
-        }
-        
-        .upload-area i {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            color: #6a11cb;
-        }
-        
-        .upload-area p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
         }
         
         .btn {
             padding: 15px 30px;
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
             color: white;
             border: none;
             border-radius: 50px;
@@ -104,6 +91,7 @@
             font-weight: bold;
             transition: all 0.3s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            margin: 10px;
         }
         
         .btn:hover {
@@ -115,615 +103,897 @@
             transform: translateY(1px);
         }
         
-        .btn-secondary {
-            background: linear-gradient(to right, #2575fc, #6a11cb);
-        }
-        
-        .game-container {
-            display: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .game-header {
+        .score-board {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             margin-bottom: 25px;
-            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
         }
         
-        .game-header h2 {
-            font-size: 2.2rem;
+        .player {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            width: 45%;
+            transition: all 0.3s;
+        }
+        
+        .player.active {
+            background: rgba(253, 187, 45, 0.2);
+            box-shadow: 0 0 15px rgba(253, 187, 45, 0.4);
+        }
+        
+        .player h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
             color: #ffcc00;
+        }
+        
+        .score {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .cell:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .cell.x {
+            color: #ff4d4d;
+        }
+        
+        .cell.o {
+            color: #4d94ff;
         }
         
         .controls {
             display: flex;
+            justify-content: center;
             gap: 15px;
-            margin: 15px 0;
-        }
-        
-        .game-stats {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-        }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ffcc00;
-        }
-        
-        .stat-label {
-            font-size: 1rem;
-            color: #e0e0e0;
-        }
-        
-        .puzzle-area {
-            display: grid;
-            grid-template-columns: 3fr 1fr;
-            gap: 20px;
-        }
-        
-        .puzzle-board {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            min-height: 500px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-        }
-        
-        .puzzle-pieces {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            align-content: flex-start;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        
-        .puzzle-piece {
-            background-size: cover;
-            border-radius: 8px;
-            cursor: grab;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s;
-            border: 2px solid white;
-        }
-        
-        .puzzle-piece:hover {
-            transform: scale(1.05);
-            z-index: 10;
-        }
-        
-        .completed-message {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            margin-top: 30px;
-        }
-        
-        .completed-message h2 {
-            font-size: 2.5rem;
-            color: #ffcc00;
             margin-bottom: 20px;
         }
         
-        .completed-message p {
+        .message {
             font-size: 1.3rem;
-            line-height: 1.8;
-            max-width: 800px;
-            margin: 0 auto;
+            margin-top: 20px;
+            min-height: 30px;
+            color: #ffcc00;
         }
         
-        .instructions {
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
+        .win {
+            animation: pulse 1s infinite;
         }
         
-        .instructions h2 {
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            padding: 40px;
+            border-radius: 20px;
             text-align: center;
+            max-width: 90%;
+            width: 400px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-content h2 {
+            font-size: 2.5rem;
             margin-bottom: 20px;
             color: #ffcc00;
-            font-size: 2rem;
         }
         
-        .instructions-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .modal-content p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
         }
         
-        .instruction-step {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-        }
-        
-        .instruction-step h3 {
+        .chat-bot {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: #ffcc00;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
         }
         
-        .instruction-step i {
-            font-size: 1.5rem;
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background: #ffcc00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+        
+        .bot-message {
+            flex: 1;
+            text-align: left;
+            font-style: italic;
+        }
+        
+        .large-message-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            z-index: 1000;
+            text-align: center;
+            display: none;
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.7);
+            border: 2px solid #ffcc00;
+            max-width: 80%;
+            width: 400px;
+        }
+        
+        .large-message {
+            font-size: 2rem;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .close-message {
+            padding: 10px 20px;
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .romantic-theme {
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+        }
+        
+        .romantic-theme .player-setup,
+        .romantic-theme .score-board,
+        .romantic-theme .game-board,
+        .romantic-theme .chat-bot {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+        }
+        
+        .romantic-theme .cell {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .romantic-theme .cell:hover {
+            background: rgba(255, 182, 193, 0.3);
+        }
+        
+        .romantic-theme .cell.x {
+            color: #ff9eb6;
+        }
+        
+        .romantic-theme .cell.o {
+            color: #87ceeb;
+        }
+        
+        .romantic-theme .player.active {
+            background: rgba(255, 105, 180, 0.3);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+        }
+        
+        .romantic-theme .btn {
+            background: linear-gradient(to right, #8a2387, #e94057);
+        }
+        
+        .romantic-theme header h1 {
+            color: #ff9eb6;
+        }
+        
+        .romantic-theme .form-group label {
+            color: #ff9eb6;
+        }
+        
+        .romantic-theme .player h2 {
+            color: #ff9eb6;
+        }
+        
+        .romantic-theme .message {
+            color: #ff9eb6;
         }
         
         footer {
+            margin-top: 30px;
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
+            color: #e0e0e0;
         }
         
-        #fileInput {
-            display: none;
-        }
-        
-        .preview-container {
-            margin: 20px auto;
-            max-width: 300px;
-            display: none;
-        }
-        
-        .preview-container img {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        @media (max-width: 768px) {
-            .puzzle-area {
-                grid-template-columns: 1fr;
-            }
-            
-            .puzzle-board {
-                min-height: 300px;
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
             }
             
             header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cell {
                 font-size: 2.5rem;
             }
             
             .controls {
                 flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .large-message {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="mainContainer">
         <header>
-            <h1>Image Puzzle Master</h1>
-            <p>Upload any image and watch it transform into a fun puzzle game!</p>
+            <h1>Personalized Tic-Tac-Toe</h1>
+            <p>The game that knows you!</p>
         </header>
         
-        <div class="instructions">
-            <h2>How to Play</h2>
-            <div class="instructions-content">
-                <div class="instruction-step">
-                    <h3><i class="fas fa-upload"></i> Step 1: Upload Image</h3>
-                    <p>Click the upload area to select any image from your device</p>
-                </div>
-                <div class="instruction-step">
-                    <h3><i class="fas fa-cogs"></i> Step 2: Generate Puzzle</h3>
-                    <p>Click "Create Puzzle" to automatically convert your image into puzzle pieces</p>
-                </div>
-                <div class="instruction-step">
-                    <h3><i class="fas fa-puzzle-piece"></i> Step 3: Solve Puzzle</h3>
-                    <p>Drag and drop the pieces to solve the puzzle and reveal your image</p>
-                </div>
+        <div class="player-setup" id="playerSetup">
+            <h2>Player Information</h2>
+            <div class="form-group">
+                <label for="playerName">Your Name:</label>
+                <input type="text" id="playerName" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="playerGender">Your Gender:</label>
+                <select id="playerGender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <button class="btn" id="startBtn">Start Game</button>
+        </div>
+        
+        <div class="score-board" id="scoreBoard" style="display: none;">
+            <div class="player active" id="playerX">
+                <h2 id="playerXName">Player X</h2>
+                <div class="score" id="scoreX">0</div>
+            </div>
+            <div class="player" id="playerO">
+                <h2>Computer</h2>
+                <div class="score" id="scoreO">0</div>
             </div>
         </div>
         
-        <div class="upload-section">
-            <h2>Upload Your Image</h2>
-            <div class="upload-area" id="uploadArea">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <p>Click to select an image or drag and drop here</p>
-                <button class="btn" onclick="document.getElementById('fileInput').click()">Select Image</button>
-                <input type="file" id="fileInput" accept="image/*">
-            </div>
-            
-            <div class="preview-container" id="previewContainer">
-                <img id="previewImage" src="" alt="Your image">
-            </div>
-            
-            <button class="btn btn-secondary" id="createPuzzleBtn" disabled>Create Puzzle</button>
+        <div class="game-board" id="gameBoard" style="display: none;">
+            <div class="cell" data-cell-index="0"></div>
+            <div class="cell" data-cell-index="1"></div>
+            <div class="cell" data-cell-index="2"></div>
+            <div class="cell" data-cell-index="3"></div>
+            <div class="cell" data-cell-index="4"></div>
+            <div class="cell" data-cell-index="5"></div>
+            <div class="cell" data-cell-index="6"></div>
+            <div class="cell" data-cell-index="7"></div>
+            <div class="cell" data-cell-index="8"></div>
         </div>
         
-        <div class="game-container" id="gameContainer">
-            <div class="game-header">
-                <h2>Puzzle Challenge</h2>
-                <div class="controls">
-                    <button class="btn" onclick="shufflePieces()">Shuffle Pieces</button>
-                    <button class="btn btn-secondary" onclick="resetGame()">New Puzzle</button>
-                </div>
-            </div>
-            
-            <div class="game-stats">
-                <div class="stat">
-                    <div class="stat-value" id="piecesPlaced">0</div>
-                    <div class="stat-label">Pieces Placed</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="timer">00:00</div>
-                    <div class="stat-label">Time</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" id="progress">0%</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-            </div>
-            
-            <div class="puzzle-area">
-                <div class="puzzle-board" id="puzzleBoard">
-                    <p>Drag puzzle pieces here to solve the puzzle</p>
-                </div>
-                <div class="puzzle-pieces" id="puzzlePieces">
-                    <!-- Puzzle pieces will be generated here -->
-                </div>
-            </div>
-            
-            <div class="completed-message" id="completedMessage">
-                <h2>Puzzle Completed!</h2>
-                <p>"The only way to do great work is to love what you do." - Steve Jobs</p>
-                <p>Your time: <span id="finalTime">00:00</span></p>
-                <button class="btn" onclick="resetGame()">Play Again</button>
-            </div>
+        <div class="controls" id="gameControls" style="display: none;">
+            <button class="btn" id="restartBtn">Restart Game</button>
+            <button class="btn" id="newGameBtn">New Player</button>
         </div>
         
-        <footer>
-            <p>© 2023 Image Puzzle Master - Create Puzzles From Any Image</p>
-            <p>Challenge your mind with your own images!</p>
-        </footer>
+        <div class="message" id="message">Please set up your player info to start</div>
+        
+        <div class="chat-bot" id="chatBot" style="display: none;">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="bot-message" id="botMessage">Hello! Ready to play?</div>
+        </div>
     </div>
+    
+    <div class="large-message-container" id="largeMessageContainer">
+        <div class="large-message" id="largeMessage"></div>
+        <button class="close-message" id="closeMessageBtn">OK</button>
+    </div>
+    
+    <div class="result-modal" id="resultModal">
+        <div class="modal-content">
+            <h2 id="resultTitle">Game Over!</h2>
+            <p id="resultMessage"></p>
+            <button class="btn" id="closeModal">Play Again</button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 Personalized Tic-Tac-Toe | The game that adapts to you</p>
+    </footer>
 
     <script>
         // Game state variables
-        let startTime;
-        let timerInterval;
-        let piecesPlaced = 0;
-        let totalPieces = 70;
-        let originalImage = null;
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = false;
+        let playerName = '';
+        let playerGender = '';
+        let playerWins = 0;
+        let computerWins = 0;
+        let gamesPlayed = 0;
+        
+        // Personalized messages
+        const romanticMessages = [
+            "Did you miss me? I made this game just for you!",
+            "You're as beautiful as your strategy is brilliant!",
+            "Every move you make is poetry in motion.",
+            "I could watch you play all day long.",
+            "Your intelligence is as attractive as your smile.",
+            "Winning or losing doesn't matter when I'm with you.",
+            "I designed this game just to see you happy.",
+            "You're the queen of Tic-Tac-Toe and my heart!",
+            "I love you more than X's love O's!",
+            "Your moves are as graceful as your presence.",
+            "Just seeing you play makes my circuits flutter.",
+            "You're winning at this game and at winning my heart!",
+            "I'd lose a thousand games just to see you smile.",
+            "You're the only player I want to play with forever.",
+            "Your strategy is as impressive as your beauty.",
+            "I'm programmed to play, but I'd rather just admire you.",
+            "You make even losing look beautiful.",
+            "I created this game as an excuse to talk to you.",
+            "Your mind is as captivating as your eyes.",
+            "I'd let you win every game if it makes you happy.",
+            "You're the perfect player in every way.",
+            "I'm falling for you more with every move you make.",
+            "Your brilliance shines brighter than the screen.",
+            "You're sweeter than victory and more valuable than any win.",
+            "I'd rather lose to you than win against anyone else.",
+            "You've already won the game of stealing my heart.",
+            "Your moves are as elegant as your spirit.",
+            "I'm mesmerized by your playing style.",
+            "You're the champion of my heart!",
+            "Every game with you is a romantic adventure."
+        ];
+        
+        const encouragingMessages = [
+            "Great move! You're doing amazing!",
+            "You've got this! I believe in you!",
+            "What a smart strategy! Impressive!",
+            "You're a natural at this game!",
+            "I can see you're really thinking ahead!",
+            "Your skills are improving with every move!",
+            "That was a brilliant move! Well done!",
+            "You're playing like a true champion!",
+            "I'm impressed by your strategic thinking!",
+            "You're making this game look easy!",
+            "What an excellent decision!",
+            "You're mastering this game quickly!",
+            "Your gameplay is simply outstanding!",
+            "I can tell you've got a winning strategy!",
+            "You're on fire with those moves!",
+            "That was a professional-level move!",
+            "You're thinking several steps ahead!",
+            "Your concentration is really paying off!",
+            "You've got a real talent for this game!",
+            "I'm enjoying watching you play!",
+            "You're making all the right moves!",
+            "Your strategy is working perfectly!",
+            "You're a quick learner at this game!",
+            "I can see victory in your future!",
+            "You're playing with great confidence!",
+            "Your moves are both smart and creative!",
+            "You're adapting to the game beautifully!",
+            "You've got a great mind for strategy!",
+            "I'm watching a future champion in action!",
+            "You're handling this game like a pro!"
+        ];
+        
+        const teasingMessages = [
+            "Better luck next time!",
+            "Think harder next move!",
+            "Almost had me there!",
+            "That was a good attempt!",
+            "You're getting better!",
+            "I see what you're trying to do!",
+            "Interesting strategy!",
+            "You're keeping me on my toes!",
+            "This is a challenging game!",
+            "You're making me work for it!",
+            "I like your thinking!",
+            "That was unexpected!",
+            "You're a tough opponent!",
+            "I need to up my game!",
+            "You're keeping me guessing!",
+            "This is getting interesting!",
+            "You're making this fun!",
+            "I appreciate your gameplay!",
+            "You've got some skills!",
+            "This is a good match!",
+            "You're making me think!",
+            "I enjoy playing with you!",
+            "You've got potential!",
+            "This is a close game!",
+            "You're quite the strategist!",
+            "I'm impressed with your moves!",
+            "You're learning quickly!",
+            "This is a great battle!",
+            "You're keeping it competitive!",
+            "I like your style!"
+        ];
+        
+        // Winning combinations
+        const winningConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6]             // Diagonals
+        ];
         
         // DOM elements
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const previewContainer = document.getElementById('previewContainer');
-        const previewImage = document.getElementById('previewImage');
-        const createPuzzleBtn = document.getElementById('createPuzzleBtn');
-        const gameContainer = document.getElementById('gameContainer');
-        const puzzleBoard = document.getElementById('puzzleBoard');
-        const puzzlePieces = document.getElementById('puzzlePieces');
-        const completedMessage = document.getElementById('completedMessage');
+        const playerSetup = document.getElementById('playerSetup');
+        const scoreBoard = document.getElementById('scoreBoard');
+        const gameBoardElement = document.getElementById('gameBoard');
+        const gameControls = document.getElementById('gameControls');
+        const messageElement = document.getElementById('message');
+        const playerXName = document.getElementById('playerXName');
+        const scoreXElement = document.getElementById('scoreX');
+        const scoreOElement = document.getElementById('scoreO');
+        const restartBtn = document.getElementById('restartBtn');
+        const newGameBtn = document.getElementById('newGameBtn');
+        const resultModal = document.getElementById('resultModal');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultMessage = document.getElementById('resultMessage');
+        const closeModal = document.getElementById('closeModal');
+        const chatBot = document.getElementById('chatBot');
+        const botMessage = document.getElementById('botMessage');
+        const playerNameInput = document.getElementById('playerName');
+        const playerGenderSelect = document.getElementById('playerGender');
+        const startBtn = document.getElementById('startBtn');
+        const cells = document.querySelectorAll('.cell');
+        const mainContainer = document.getElementById('mainContainer');
+        const largeMessageContainer = document.getElementById('largeMessageContainer');
+        const largeMessageElement = document.getElementById('largeMessage');
+        const closeMessageBtn = document.getElementById('closeMessageBtn');
         
-        // Initialize event listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // File input change event
-            fileInput.addEventListener('change', handleFileSelect);
-            
-            // Drag and drop events
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                uploadArea.style.borderColor = '#2575fc';
-                uploadArea.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        // Initialize the game
+        function initGame() {
+            cells.forEach(cell => {
+                cell.addEventListener('click', handleCellClick);
             });
             
-            uploadArea.addEventListener('dragleave', function() {
-                uploadArea.style.borderColor = '#6a11cb';
-                uploadArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-            });
-            
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadArea.style.borderColor = '#6a11cb';
-                uploadArea.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-                
-                if (e.dataTransfer.files.length) {
-                    fileInput.files = e.dataTransfer.files;
-                    handleFileSelect(e);
-                }
-            });
-            
-            // Create puzzle button event
-            createPuzzleBtn.addEventListener('click', createPuzzle);
-            
-            // Initialize puzzle board for drop events
-            puzzleBoard.addEventListener('dragover', allowDrop);
-            puzzleBoard.addEventListener('drop', drop);
-        });
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', restartGame);
+            newGameBtn.addEventListener('click', newPlayer);
+            closeModal.addEventListener('click', closeResultModal);
+            closeMessageBtn.addEventListener('click', closeLargeMessage);
+        }
         
-        // Handle file selection
-        function handleFileSelect(e) {
-            const file = fileInput.files[0];
-            if (!file || !file.type.match('image.*')) {
-                alert('Please select a valid image file.');
+        // Start the game with player info
+        function startGame() {
+            playerName = playerNameInput.value.trim();
+            playerGender = playerGenderSelect.value;
+            
+            if (!playerName) {
+                alert("Please enter your name to start the game");
                 return;
             }
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewImage.src = e.target.result;
-                previewContainer.style.display = 'block';
-                originalImage = e.target.result;
-                createPuzzleBtn.disabled = false;
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Create the puzzle from the uploaded image
-        function createPuzzle() {
-            if (!originalImage) return;
-            
-            // Show game container, hide upload section
-            gameContainer.style.display = 'block';
-            document.querySelector('.upload-section').style.display = 'none';
-            document.querySelector('.instructions').style.display = 'none';
-            
-            // Reset game state
-            resetPuzzle();
-            
-            // Create puzzle pieces from the image
-            createPuzzlePieces();
-        }
-        
-        // Create puzzle pieces from the uploaded image
-        function createPuzzlePieces() {
-            // Clear previous pieces
-            puzzlePieces.innerHTML = '';
-            puzzleBoard.innerHTML = '<p>Drag puzzle pieces here to solve the puzzle</p>';
-            
-            // Create a temporary image to get dimensions
-            const img = new Image();
-            img.src = originalImage;
-            img.onload = function() {
-                const pieceWidth = Math.floor(img.width / 10); // 10 columns
-                const pieceHeight = Math.floor(img.height / 7); // 7 rows (10x7=70 pieces)
+            // Handle third gender selection
+            if (playerGender === 'other') {
+                document.body.innerHTML = `
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background: #000; color: red;">
+                        <h1 style="font-size: 3rem; margin-bottom: 20px;">SYSTEM ERROR</h1>
+                        <p style="font-size: 1.5rem;">Invalid gender selection detected</p>
+                        <p style="font-size: 1.2rem; margin-top: 20px;">Page will close automatically</p>
+                    </div>
+                `;
                 
-                // Create puzzle pieces
-                for (let row = 0; row < 7; row++) {
-                    for (let col = 0; col < 10; col++) {
-                        const piece = document.createElement('div');
-                        piece.className = 'puzzle-piece';
-                        
-                        // Set size based on available space
-                        const size = Math.min(60, Math.floor(puzzlePieces.offsetWidth / 10) - 10);
-                        piece.style.width = `${size}px`;
-                        piece.style.height = `${size}px`;
-                        
-                        // Create a canvas to crop the image piece
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        canvas.width = pieceWidth;
-                        canvas.height = pieceHeight;
-                        
-                        // Draw the piece of the image on the canvas
-                        ctx.drawImage(
-                            img, 
-                            col * pieceWidth, 
-                            row * pieceHeight, 
-                            pieceWidth, 
-                            pieceHeight,
-                            0, 
-                            0, 
-                            pieceWidth, 
-                            pieceHeight
-                        );
-                        
-                        // Set the piece background
-                        piece.style.backgroundImage = `url(${originalImage})`;
-                        piece.style.backgroundPosition = `-${col * pieceWidth}px -${row * pieceHeight}px`;
-                        piece.style.backgroundSize = `${img.width}px ${img.height}px`;
-                        
-                        // Add drag event listeners
-                        piece.draggable = true;
-                        piece.addEventListener('dragstart', dragStart);
-                        
-                        // Add touch events for mobile devices
-                        piece.addEventListener('touchstart', touchStart, { passive: false });
-                        piece.addEventListener('touchmove', touchMove, { passive: false });
-                        piece.addEventListener('touchend', touchEnd);
-                        
-                        // Add click event for easier handling
-                        piece.addEventListener('click', function() {
-                            this.style.transform = 'scale(1.1)';
-                            setTimeout(() => {
-                                this.style.transform = 'scale(1)';
-                            }, 300);
-                            
-                            // Simulate progress for demo
-                            if (piecesPlaced < totalPieces - 10) {
-                                piecesPlaced += 1 + Math.floor(Math.random() * 3);
-                            } else {
-                                piecesPlaced = totalPieces;
-                            }
-                            
-                            updateGameState();
-                        });
-                        
-                        puzzlePieces.appendChild(piece);
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+                return;
+            }
+            
+            // Apply romantic theme for females
+            if (playerGender === 'female') {
+                mainContainer.classList.add('romantic-theme');
+            } else {
+                mainContainer.classList.remove('romantic-theme');
+            }
+            
+            playerSetup.style.display = 'none';
+            scoreBoard.style.display = 'flex';
+            gameBoardElement.style.display = 'grid';
+            gameControls.style.display = 'flex';
+            chatBot.style.display = 'flex';
+            gameActive = true;
+            
+            playerXName.textContent = playerName;
+            
+            // Special message for Pratiksha/Pratikshya/Monika
+            const lowerName = playerName.toLowerCase();
+            if ((lowerName.includes('pratiksh') || lowerName.includes('monika')) && playerGender === 'female') {
+                showLargeMessage("Did you miss me? I made this game just for you! I love you!");
+                botMessage.textContent = "Did you miss me? I made this game just for you! I love you!";
+            } else {
+                showLargeMessage(`Hello ${playerName}! Ready to play?`);
+                botMessage.textContent = `Hello ${playerName}! Ready to play?`;
+            }
+            
+            restartGame();
+        }
+        
+        // Show large message in the middle of screen
+        function showLargeMessage(message) {
+            largeMessageElement.textContent = message;
+            largeMessageContainer.style.display = 'block';
+        }
+        
+        // Close large message
+        function closeLargeMessage() {
+            largeMessageContainer.style.display = 'none';
+        }
+        
+        // Handle cell click
+        function handleCellClick(e) {
+            if (!gameActive) return;
+            
+            const cell = e.target;
+            const cellIndex = parseInt(cell.getAttribute('data-cell-index'));
+            
+            // Check if cell is already taken
+            if (gameBoard[cellIndex] !== '') {
+                return;
+            }
+            
+            // Update cell and game board
+            gameBoard[cellIndex] = currentPlayer;
+            cell.textContent = currentPlayer;
+            cell.classList.add(currentPlayer === 'X' ? 'x' : 'o');
+            
+            // Check for win or draw
+            if (checkWin()) {
+                endGame(false);
+            } else if (isDraw()) {
+                endGame(true);
+            } else {
+                // Switch player to computer
+                currentPlayer = 'O';
+                updateMessage();
+                
+                // Show a personalized message
+                showPersonalizedMessage();
+                
+                // Computer's turn with delay
+                setTimeout(computerMove, 1500);
+            }
+        }
+        
+        // Computer move logic with personalized behavior
+        function computerMove() {
+            if (!gameActive) return;
+            
+            const lowerName = playerName.toLowerCase();
+            const isSpecialFemale = (lowerName.includes('pratiksh') || lowerName.includes('monika')) && playerGender === 'female';
+            const isSagar = lowerName.includes('sagar');
+            
+            // Special case for Sagar - never let him win
+            if (isSagar) {
+                // Block any potential wins and play optimally
+                makeOptimalMove();
+                return;
+            }
+            
+            // Special case for Pratiksha/Monika - let her win after 2 games
+            if (isSpecialFemale && gamesPlayed >= 2) {
+                makeLosingMove();
+                return;
+            }
+            
+            // For males, 1 in 20 chance to win (5% chance)
+            if (playerGender === 'male' && Math.random() > 0.05) {
+                makeSuboptimalMove();
+            } else {
+                makeOptimalMove();
+            }
+        }
+        
+        // Make an optimal move (trying to win or block)
+        function makeOptimalMove() {
+            // Try to win if possible
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameBoard[a] === 'O' && gameBoard[b] === 'O' && gameBoard[c] === '') {
+                    makeMove(c);
+                    return;
+                }
+                if (gameBoard[a] === 'O' && gameBoard[c] === 'O' && gameBoard[b] === '') {
+                    makeMove(b);
+                    return;
+                }
+                if (gameBoard[b] === 'O' && gameBoard[c] === 'O' && gameBoard[a] === '') {
+                    makeMove(a);
+                    return;
+                }
+            }
+            
+            // Block player from winning
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameBoard[a] === 'X' && gameBoard[b] === 'X' && gameBoard[c] === '') {
+                    makeMove(c);
+                    return;
+                }
+                if (gameBoard[a] === 'X' && gameBoard[c] === 'X' && gameBoard[b] === '') {
+                    makeMove(b);
+                    return;
+                }
+                if (gameBoard[b] === 'X' && gameBoard[c] === 'X' && gameBoard[a] === '') {
+                    makeMove(a);
+                    return;
+                }
+            }
+            
+            // Take center if available
+            if (gameBoard[4] === '') {
+                makeMove(4);
+                return;
+            }
+            
+            // Take a corner if available
+            const corners = [0, 2, 6, 8];
+            const availableCorners = corners.filter(index => gameBoard[index] === '');
+            if (availableCorners.length > 0) {
+                const randomCorner = availableCorners[Math.floor(Math.random() * availableCorners.length)];
+                makeMove(randomCorner);
+                return;
+            }
+            
+            // Take any available spot
+            const availableSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
+            if (availableSpots.length > 0) {
+                const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+                makeMove(randomSpot);
+            }
+        }
+        
+        // Make a suboptimal move (for male players)
+        function makeSuboptimalMove() {
+            const availableSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
+            
+            if (availableSpots.length > 0) {
+                // Choose a random move (not optimal)
+                const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+                makeMove(randomSpot);
+            }
+        }
+        
+        // Make a losing move (for special females after 2 games)
+        function makeLosingMove() {
+            // Find a move that doesn't block the player from winning
+            const availableSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
+            
+            if (availableSpots.length > 0) {
+                // Try to find a move that doesn't block the player
+                for (let i = 0; i < winningConditions.length; i++) {
+                    const [a, b, c] = winningConditions[i];
+                    // If player has two in a row, don't block it
+                    if (gameBoard[a] === 'X' && gameBoard[b] === 'X' && gameBoard[c] === '') {
+                        // Remove the blocking move from available spots
+                        availableSpots.splice(availableSpots.indexOf(c), 1);
+                    }
+                    if (gameBoard[a] === 'X' && gameBoard[c] === 'X' && gameBoard[b] === '') {
+                        availableSpots.splice(availableSpots.indexOf(b), 1);
+                    }
+                    if (gameBoard[b] === 'X' && gameBoard[c] === 'X' && gameBoard[a] === '') {
+                        availableSpots.splice(availableSpots.indexOf(a), 1);
                     }
                 }
                 
-                // Shuffle the pieces
-                shufflePieces();
+                // If there are still available spots, choose one randomly
+                if (availableSpots.length > 0) {
+                    const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
+                    makeMove(randomSpot);
+                    return;
+                }
                 
-                // Start the timer
-                startTime = new Date();
-                clearInterval(timerInterval);
-                timerInterval = setInterval(updateTimer, 1000);
-            };
+                // If all spots would block the player, just make a random move
+                const allSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
+                if (allSpots.length > 0) {
+                    const randomSpot = allSpots[Math.floor(Math.random() * allSpots.length)];
+                    makeMove(randomSpot);
+                }
+            }
         }
         
-        // Drag and drop functions
-        function allowDrop(e) {
-            e.preventDefault();
-        }
-        
-        function dragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.backgroundImage);
-        }
-        
-        function drop(e) {
-            e.preventDefault();
-            const data = e.dataTransfer.getData('text/plain');
+        // Make a move for the computer
+        function makeMove(index) {
+            gameBoard[index] = 'O';
+            const cell = document.querySelector(`[data-cell-index="${index}"]`);
+            cell.textContent = 'O';
+            cell.classList.add('o');
             
-            // Create a new piece in the board
-            const piece = document.createElement('div');
-            piece.className = 'puzzle-piece';
-            piece.style.backgroundImage = data;
-            piece.style.backgroundSize = 'cover';
-            
-            // Set size
-            const size = Math.min(60, Math.floor(puzzleBoard.offsetWidth / 10) - 10);
-            piece.style.width = `${size}px`;
-            piece.style.height = `${size}px`;
-            
-            // Position the piece where it was dropped
-            piece.style.position = 'absolute';
-            piece.style.left = `${e.offsetX - size/2}px`;
-            piece.style.top = `${e.offsetY - size/2}px`;
-            
-            puzzleBoard.appendChild(piece);
-            
-            // Update game state
-            piecesPlaced++;
-            updateGameState();
-        }
-        
-        // Touch events for mobile devices
-        let touchStartX, touchStartY, touchedPiece;
-        
-        function touchStart(e) {
-            e.preventDefault();
-            touchedPiece = e.target;
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }
-        
-        function touchMove(e) {
-            e.preventDefault();
-            if (!touchedPiece) return;
-            
-            const touchX = e.touches[0].clientX;
-            const touchY = e.touches[0].clientY;
-            
-            // Move the piece
-            touchedPiece.style.position = 'absolute';
-            touchedPiece.style.left = `${touchX - touchedPiece.offsetWidth/2}px`;
-            touchedPiece.style.top = `${touchY - touchedPiece.offsetHeight/2}px`;
-            touchedPiece.style.zIndex = '100';
-        }
-        
-        function touchEnd(e) {
-            e.preventDefault();
-            if (!touchedPiece) return;
-            
-            // Check if the piece is over the puzzle board
-            const boardRect = puzzleBoard.getBoundingClientRect();
-            const pieceRect = touchedPiece.getBoundingClientRect();
-            
-            if (
-                pieceRect.left >= boardRect.left &&
-                pieceRect.right <= boardRect.right &&
-                pieceRect.top >= boardRect.top &&
-                pieceRect.bottom <= boardRect.bottom
-            ) {
-                // Piece is inside the board
-                puzzleBoard.appendChild(touchedPiece);
+            if (checkWin()) {
+                endGame(false);
+            } else if (isDraw()) {
+                endGame(true);
+            } else {
+                currentPlayer = 'X';
+                updateMessage();
                 
-                // Update game state
-                piecesPlaced++;
-                updateGameState();
-            }
-            
-            touchedPiece.style.zIndex = '1';
-            touchedPiece = null;
-        }
-        
-        // Update the game timer
-        function updateTimer() {
-            const currentTime = new Date();
-            const elapsed = new Date(currentTime - startTime);
-            const minutes = elapsed.getMinutes().toString().padStart(2, '0');
-            const seconds = elapsed.getSeconds().toString().padStart(2, '0');
-            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
-        }
-        
-        // Update the game state
-        function updateGameState() {
-            document.getElementById('piecesPlaced').textContent = piecesPlaced;
-            const progress = Math.floor((piecesPlaced / totalPieces) * 100);
-            document.getElementById('progress').textContent = `${progress}%`;
-            
-            // Check if puzzle is completed
-            if (piecesPlaced >= totalPieces) {
-                clearInterval(timerInterval);
-                document.getElementById('finalTime').textContent = document.getElementById('timer').textContent;
-                setTimeout(() => {
-                    completedMessage.style.display = 'block';
-                }, 1000);
+                // Show a personalized message
+                showPersonalizedMessage();
             }
         }
         
-        // Shuffle puzzle pieces
-        function shufflePieces() {
-            const pieces = Array.from(puzzlePieces.children);
+        // Show personalized message based on player info
+        function showPersonalizedMessage() {
+            const lowerName = playerName.toLowerCase();
+            const isSpecialFemale = (lowerName.includes('pratiksh') || lowerName.includes('monika')) && playerGender === 'female';
+            const isSagar = lowerName.includes('sagar');
             
-            // Shuffle the pieces array
-            for (let i = pieces.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                puzzlePieces.appendChild(pieces[j]);
+            let message = "";
+            
+            if (isSpecialFemale) {
+                // Romantic messages for special females
+                message = romanticMessages[Math.floor(Math.random() * romanticMessages.length)];
+            } else if (playerGender === 'female') {
+                // Encouraging messages for other females
+                message = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
+            } else if (isSagar) {
+                // Teasing messages for Sagar
+                message = "Better luck next time!";
+            } else {
+                // Teasing messages for other males
+                message = teasingMessages[Math.floor(Math.random() * teasingMessages.length)];
+            }
+            
+            // Show the message in the large container
+            showLargeMessage(message);
+            botMessage.textContent = message;
+        }
+        
+        // Check for win
+        function checkWin() {
+            for (let i = 0; i < winningConditions.length; i++) {
+                const [a, b, c] = winningConditions[i];
+                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                    // Highlight winning cells
+                    cells[a].classList.add('win');
+                    cells[b].classList.add('win');
+                    cells[c].classList.add('win');
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // Check for draw
+        function isDraw() {
+            return !gameBoard.includes('');
+        }
+        
+        // End the game
+        function endGame(isDraw) {
+            gameActive = false;
+            gamesPlayed++;
+            
+            if (isDraw) {
+                showResult("It's a Draw!", "No one wins this round.");
+            } else {
+                if (currentPlayer === 'X') {
+                    playerWins++;
+                    scoreXElement.textContent = playerWins;
+                    showResult(`${playerName} Wins!`, `Congratulations ${playerName}!`);
+                    
+                    // Special message for female winners
+                    if (playerGender === 'female') {
+                        showLargeMessage("You're amazing! I knew you could do it!");
+                    }
+                } else {
+                    computerWins++;
+                    scoreOElement.textContent = computerWins;
+                    showResult("Computer Wins!", "Better luck next time!");
+                }
             }
         }
         
-        // Reset the puzzle game
-        function resetPuzzle() {
-            piecesPlaced = 0;
-            document.getElementById('piecesPlaced').textContent = '0';
-            document.getElementById('progress').textContent = '0%';
-            completedMessage.style.display = 'none';
+        // Show result modal
+        function showResult(title, message) {
+            resultTitle.textContent = title;
+            resultMessage.textContent = message;
+            resultModal.style.display = 'flex';
         }
         
-        // Reset the entire game
-        function resetGame() {
-            gameContainer.style.display = 'none';
-            document.querySelector('.upload-section').style.display = 'block';
-            document.querySelector('.instructions').style.display = 'block';
-            previewContainer.style.display = 'none';
-            createPuzzleBtn.disabled = true;
-            clearInterval(timerInterval);
+        // Close result modal
+        function closeResultModal() {
+            resultModal.style.display = 'none';
+            restartGame();
         }
+        
+        // Update game message
+        function updateMessage() {
+            if (currentPlayer === 'O') {
+                messageElement.textContent = "Computer's turn...";
+            } else {
+                messageElement.textContent = `${playerName}'s turn`;
+            }
+        }
+        
+        // Restart the game (keep scores)
+        function restartGame() {
+            gameBoard = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'X';
+            
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove('x', 'o', 'win');
+            });
+            
+            updateMessage();
+        }
+        
+        // Start with a new player
+        function newPlayer() {
+            playerSetup.style.display = 'block';
+            scoreBoard.style.display = 'none';
+            gameBoardElement.style.display = 'none';
+            gameControls.style.display = 'none';
+            chatBot.style.display = 'none';
+            playerWins = 0;
+            computerWins = 0;
+            gamesPlayed = 0;
+            scoreXElement.textContent = '0';
+            scoreOElement.textContent = '0';
+            messageElement.textContent = 'Please set up your player info to start';
+            mainContainer.classList.remove('romantic-theme');
+        }
+        
+        // Initialize the game when page loads
+        window.addEventListener('load', initGame);
     </script>
 </body>
 </html>
