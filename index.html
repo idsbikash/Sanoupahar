@@ -3,997 +3,2858 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personalized Tic-Tac-Toe</title>
+    <title>SANOUPAHAR - Small Gift. Systemic Change.</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Base Styles */
+        :root {
+            --primary: #2C3E50;
+            --secondary: #E74C3C;
+            --accent: #3498DB;
+            --light: #ECF0F1;
+            --dark: #1A252F;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --koshi: #FF6B35;
+            --madhesh: #FFD166;
+            --bagmati: #06D6A0;
+            --gandaki: #118AB2;
+            --lumbini: #EF476F;
+            --karnali: #073B4C;
+            --sudurpashchim: #7209B7;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 15px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 500px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-            text-align: center;
+
+        /* Typography */
+        h1, h2, h3, h4, h5 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
             position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
         }
-        
-        header {
-            margin-bottom: 30px;
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
         }
-        
-        header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
-            color: #ffcc00;
+
+        h3 {
+            font-size: 1.8rem;
         }
-        
-        header p {
-            font-size: 1.2rem;
-            color: #e0e0e0;
-        }
-        
-        .player-setup {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #ffcc00;
-        }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            background: linear-gradient(to right, #1a2a6c, #b21f1f);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
+
+        p {
+            margin-bottom: 1.2rem;
             font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            margin: 10px;
         }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        .btn:active {
-            transform: translateY(1px);
-        }
-        
-        .score-board {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-        }
-        
-        .player {
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            width: 45%;
-            transition: all 0.3s;
-        }
-        
-        .player.active {
-            background: rgba(253, 187, 45, 0.2);
-            box-shadow: 0 0 15px rgba(253, 187, 45, 0.4);
-        }
-        
-        .player h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #ffcc00;
-        }
-        
-        .score {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .cell {
-            aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .cell:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .cell.x {
-            color: #ff4d4d;
-        }
-        
-        .cell.o {
-            color: #4d94ff;
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .message {
-            font-size: 1.3rem;
-            margin-top: 20px;
-            min-height: 30px;
-            color: #ffcc00;
-        }
-        
-        .win {
-            animation: pulse 1s infinite;
-        }
-        
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-        
-        .result-modal {
-            display: none;
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(52, 152, 219, 0.8); }
+        }
+
+        /* Header & Navigation */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        .logo .tagline {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover:after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeIn 1s ease-out;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: slideInLeft 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            animation: slideInRight 1s ease-out 0.3s both;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            color: white;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite 1s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            animation: none;
+        }
+
+        .floating-elements {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            pointer-events: none;
+            z-index: 1;
         }
-        
-        .modal-content {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
-            padding: 40px;
-            border-radius: 20px;
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 20%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        /* Main Content Sections */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
             text-align: center;
-            max-width: 90%;
-            width: 400px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 4rem;
         }
-        
-        .modal-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #ffcc00;
+
+        .section-header h2 {
+            margin-bottom: 1rem;
         }
-        
-        .modal-content p {
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Leader Section */
+        .leader-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .leader-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .leader-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            transition: transform 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .leader-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .leader-bio h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .leader-bio ul {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .leader-bio li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .leader-bio li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .countdown-timer {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+            text-align: center;
+            animation: glow 3s infinite;
+        }
+
+        .timer-display {
+            display: flex;
+            justify-content: space-between;
+            margin: 1.5rem 0;
+        }
+
+        .timer-unit {
+            text-align: center;
+            flex: 1;
+        }
+
+        .timer-unit .number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            display: block;
+            color: white;
+        }
+
+        .timer-unit .label {
+            font-size: 1rem;
+            opacity: 0.9;
+            color: var(--light);
+        }
+
+        .timer-note {
+            font-style: italic;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Meaning Section */
+        .meaning-animation {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .gift-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .meaning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 3rem 0;
+        }
+
+        .meaning-card {
+            background: white;
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meaning-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+        }
+
+        .meaning-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .meaning-card .icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        /* Strategy Comparison */
+        .strategy-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 3rem;
+            align-items: start;
+            margin: 4rem 0;
+        }
+
+        .dont-do, .will-do {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .dont-do:hover, .will-do:hover {
+            transform: translateY(-5px);
+        }
+
+        .dont-do .header {
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .will-do .header {
+            border-bottom: 3px solid var(--success);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .x-mark, .check-mark {
             font-size: 1.5rem;
-            margin-bottom: 30px;
+            margin-right: 10px;
         }
-        
-        .chat-bot {
+
+        .x-mark {
+            color: var(--secondary);
+        }
+
+        .check-mark {
+            color: var(--success);
+        }
+
+        .negative-list, .positive-list {
+            list-style: none;
+        }
+
+        .negative-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .negative-list li:before {
+            content: '✖';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .positive-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #eee;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .positive-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .vs-circle {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-top: 3rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
         }
-        
-        .bot-avatar {
+
+        /* Pillars Container */
+        .pillars-container {
+            display: grid;
+            gap: 4rem;
+            margin: 4rem 0;
+        }
+
+        .pillar-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            border-top: 8px solid var(--accent);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pillar-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pillar-icon {
+            font-size: 3.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .pillar-tag {
+            background: var(--light);
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-left: auto;
+        }
+
+        .formula {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            font-size: 1.5rem;
+            text-align: center;
+            border-left: 5px solid var(--accent);
+        }
+
+        .component {
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin: 0 0.5rem;
+        }
+
+        .component.skill {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .component.thinking {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .component.industry {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .plus {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .solution-details {
+            margin: 2rem 0;
+        }
+
+        .solution-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .solution-item:hover {
+            background: #e9ecef;
+        }
+
+        .solution-item .bullet {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: var(--accent);
+        }
+
+        .pillar-gift {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px dashed #dee2e6;
+        }
+
+        .gift-tag {
+            background: linear-gradient(135deg, var(--success), var(--accent));
+            color: white;
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* Province Model */
+        .province-model {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            background: white;
+            padding: 4rem;
+            border-radius: var(--radius);
+            margin: 4rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .province-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat:hover {
+            transform: translateY(-5px);
+            background: #e9ecef;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .nepal-map-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nepal-map {
+            width: 100%;
+            max-width: 500px;
+            height: 550px;
+            position: relative;
+            background: #f0f0f0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .province {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .province:hover {
+            transform: scale(1.05);
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        .province-name {
+            position: relative;
+            z-index: 2;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* Province positions (approximate) */
+        .koshi { top: 10%; left: 30%; width: 120px; height: 100px; background: var(--koshi); }
+        .madhesh { top: 60%; left: 25%; width: 140px; height: 80px; background: var(--madhesh); }
+        .bagmati { top: 30%; left: 40%; width: 100px; height: 100px; background: var(--bagmati); }
+        .gandaki { top: 25%; left: 50%; width: 110px; height: 90px; background: var(--gandaki); }
+        .lumbini { top: 45%; left: 35%; width: 130px; height: 90px; background: var(--lumbini); }
+        .karnali { top: 15%; left: 60%; width: 180px; height: 120px; background: var(--karnali); }
+        .sudurpashchim { top: 40%; left: 65%; width: 150px; height: 100px; background: var(--sudurpashchim); }
+
+        /* Province Plans */
+        .province-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin: 4rem 0;
+        }
+
+        .province-plan {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            border-left: 8px solid;
+        }
+
+        .province-plan:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .province-header {
+            padding: 1.5rem 2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .province-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .province-content {
+            padding: 2rem;
+        }
+
+        .problems, .solutions {
+            margin-bottom: 1.5rem;
+        }
+
+        .problems ul, .solutions ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+
+        .problems li, .solutions li {
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .problems li:before {
+            content: '⚠';
+            position: absolute;
+            left: -1.5rem;
+            color: var(--secondary);
+        }
+
+        .solutions li:before {
+            content: '✓';
+            position: absolute;
+            left: -1.5rem;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .province-gift {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .gift-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .gift-icon {
+            font-size: 1.5rem;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .progress-metrics {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px dashed #dee2e6;
+        }
+
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            text-align: center;
+            flex: 1;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent);
+            display: block;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Political Commentary */
+        .political-commentary {
+            background: white;
+            border-radius: var(--radius);
+            padding: 4rem;
+            margin: 4rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border-left: 5px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            font-style: italic;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .achievement {
+            text-align: center;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .achievement:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .reality-check {
+            margin-top: 4rem;
+        }
+
+        .politicians-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .politician-card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .politician-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .politician-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .politician-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .politician-card:hover .politician-image img {
+            transform: scale(1.1);
+        }
+
+        .party-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .politician-info {
+            padding: 1.5rem;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .performance-quote {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .performance-quote blockquote {
+            font-style: italic;
+            margin: 0;
+            color: #555;
+        }
+
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .performance-metrics .metric {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .metric.negative {
+            background: #ffe5e5;
+            color: #c0392b;
+        }
+
+        .metric.neutral {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .metric .label {
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric .value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        /* Different Section */
+        .different-section {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 5rem 2rem;
+            border-radius: var(--radius);
+            margin: 4rem 0;
+        }
+
+        .different-section h2, .different-section h3, .different-section .subtitle {
+            color: white;
+        }
+
+        .different-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .different-point {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .different-point:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .point-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .accountability-pledge {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .pledge-box {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .signature {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .signature img {
+            width: 150px;
+            opacity: 0.9;
+        }
+
+        /* Roadmap */
+        .roadmap-container {
+            background: white;
+            padding: 4rem;
+            border-radius: var(--radius);
+            margin: 4rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--accent), var(--success));
+            border-radius: 2px;
+        }
+
+        .timeline-phase {
+            position: relative;
+            margin-bottom: 4rem;
+            padding-left: 100px;
+        }
+
+        .phase-marker {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100px;
+            text-align: center;
+        }
+
+        .phase-number {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            margin-right: 15px;
-            background: #ffcc00;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.8rem;
-        }
-        
-        .bot-message {
-            flex: 1;
-            text-align: left;
-            font-style: italic;
-        }
-        
-        .large-message-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 20px;
-            z-index: 1000;
-            text-align: center;
-            display: none;
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.7);
-            border: 2px solid #ffcc00;
-            max-width: 80%;
-            width: 400px;
-        }
-        
-        .large-message {
-            font-size: 2rem;
-            color: #ffcc00;
-            margin-bottom: 20px;
             font-weight: bold;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            margin: 0 auto 0.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-        
-        .close-message {
-            padding: 10px 20px;
-            background: #ffcc00;
-            color: #000;
-            border: none;
+
+        .phase-years {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .phase-content {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent);
+            transition: transform 0.3s ease;
+        }
+
+        .phase-content:hover {
+            transform: translateX(10px);
+            background: #e9ecef;
+        }
+
+        .phase-metrics {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .metric-tag {
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .progress-tracker {
+            margin-top: 4rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #dee2e6;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 10px;
+            width: 5%;
+            transition: width 2s ease-in-out;
+        }
+
+        .progress-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            color: #666;
+        }
+
+        /* Engagement Section */
+        .engagement-section {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 5rem 2rem;
+            border-radius: var(--radius);
+            margin: 4rem 0;
+        }
+
+        .engagement-section h2, .engagement-section h3, .engagement-section h4 {
+            color: white;
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .contact-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .contact-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .contact-detail {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            font-weight: bold;
+        }
+
+        .contact-note {
+            font-style: italic;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-button {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
             border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .contact-button:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .discussion-topics {
+            margin: 4rem 0;
+        }
+
+        .topic-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .topic-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .topic-tag:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .engagement-pledge {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        /* Dashboard */
+        .dashboard-section {
+            background: white;
+            padding: 4rem;
+            border-radius: var(--radius);
+            margin: 4rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin: 3rem 0;
+        }
+
+        .dashboard-card {
+            background: #f8f9fa;
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--accent);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            background: #e9ecef;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .dashboard-metric {
+            margin: 1.5rem 0;
+        }
+
+        .dashboard-metric .metric-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            display: block;
+            line-height: 1;
+        }
+
+        .dashboard-metric .metric-label {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar-small {
+            height: 12px;
+            background: #dee2e6;
+            border-radius: 6px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-small .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 6px;
+        }
+
+        .metric-target {
+            font-size: 0.9rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        .dashboard-update {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px dashed #dee2e6;
+            text-align: center;
+            color: #666;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo h2 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-logo .tagline {
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .link-column h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .link-column a {
+            display: block;
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .link-column a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .footer-newsletter {
+            margin-top: 1rem;
+        }
+
+        .footer-newsletter h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            margin-top: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            font-size: 1rem;
+        }
+
+        .newsletter-form button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 0 5px 5px 0;
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.3s ease;
         }
-        
-        .romantic-theme {
-            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+
+        .newsletter-form button:hover {
+            background: #2980b9;
         }
-        
-        .romantic-theme .player-setup,
-        .romantic-theme .score-board,
-        .romantic-theme .game-board,
-        .romantic-theme .chat-bot {
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
-        }
-        
-        .romantic-theme .cell {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        
-        .romantic-theme .cell:hover {
-            background: rgba(255, 182, 193, 0.3);
-        }
-        
-        .romantic-theme .cell.x {
-            color: #ff9eb6;
-        }
-        
-        .romantic-theme .cell.o {
-            color: #87ceeb;
-        }
-        
-        .romantic-theme .player.active {
-            background: rgba(255, 105, 180, 0.3);
-            box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
-        }
-        
-        .romantic-theme .btn {
-            background: linear-gradient(to right, #8a2387, #e94057);
-        }
-        
-        .romantic-theme header h1 {
-            color: #ff9eb6;
-        }
-        
-        .romantic-theme .form-group label {
-            color: #ff9eb6;
-        }
-        
-        .romantic-theme .player h2 {
-            color: #ff9eb6;
-        }
-        
-        .romantic-theme .message {
-            color: #ff9eb6;
-        }
-        
-        footer {
-            margin-top: 30px;
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
             text-align: center;
-            color: #e0e0e0;
+            color: #aaa;
         }
-        
-        @media (max-width: 500px) {
-            .container {
-                padding: 20px;
+
+        .footer-quote {
+            font-style: italic;
+            margin-top: 1rem;
+            color: var(--accent);
+        }
+
+        /* Quote Blocks */
+        .quote-block {
+            margin: 3rem 0;
+            padding: 2rem 3rem;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border-left: 5px solid var(--accent);
+        }
+
+        .quote-block blockquote {
+            font-size: 1.5rem;
+            font-style: italic;
+            color: #555;
+            margin: 0;
+        }
+
+        .quote-block cite {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-align: right;
+        }
+
+        /* Interactive Elements */
+        .interactive-element {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-element:hover {
+            transform: scale(1.02);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .strategy-comparison {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
             
-            header h1 {
-                font-size: 2.2rem;
+            .vs-circle {
+                margin: 2rem auto;
+                order: 2;
             }
             
-            .cell {
+            .province-model {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
                 font-size: 2.5rem;
             }
             
-            .controls {
-                flex-direction: column;
-                align-items: center;
+            h2 {
+                font-size: 2rem;
             }
             
-            .btn {
-                width: 100%;
+            section {
+                padding: 4rem 1.5rem;
             }
             
-            .large-message {
+            .leader-section {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .meaning-grid, .achievements-grid, .different-grid, .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .politicians-grid, .province-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-phase {
+                padding-left: 70px;
+            }
+            
+            .phase-marker {
+                width: 70px;
+            }
+            
+            .phase-number {
+                width: 50px;
+                height: 50px;
                 font-size: 1.5rem;
             }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pillar-card, .province-model, .political-commentary, .roadmap-container, .dashboard-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .hero {
+                padding: 4rem 1rem 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .timer-display {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .performance-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 1rem; }
+        .mt-2 { margin-top: 2rem; }
+        .mt-3 { margin-top: 3rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        .mb-3 { margin-bottom: 3rem; }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <div class="container" id="mainContainer">
-        <header>
-            <h1>Personalized Tic-Tac-Toe</h1>
-            <p>The game that knows you!</p>
-        </header>
-        
-        <div class="player-setup" id="playerSetup">
-            <h2>Player Information</h2>
-            <div class="form-group">
-                <label for="playerName">Your Name:</label>
-                <input type="text" id="playerName" placeholder="Enter your name">
+    <!-- Header & Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <h1>SANOUPAHAR</h1>
+                <div class="tagline">सानोउपहार | Small Gift. Systemic Change.</div>
             </div>
-            <div class="form-group">
-                <label for="playerGender">Your Gender:</label>
-                <select id="playerGender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                </select>
+            <nav>
+                <ul>
+                    <li><a href="#vision">Vision</a></li>
+                    <li><a href="#leader">Leader</a></li>
+                    <li><a href="#pillars">Pillars</a></li>
+                    <li><a href="#provinces">Provinces</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                    <li><a href="#engage">Engage</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>SANOUPAHAR</h1>
+            <div class="hero-subtitle">सानोउपहार | Small Gift. Systemic Change.</div>
+            <p>One small gift at a time, we rebuild Nepal. Not with revolution, but with resolution.</p>
+            <a href="#vision" class="cta-button">Explore Our Vision</a>
+        </div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision" class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Our Vision</h2>
+            <p class="section-subtitle">Transforming Nepal through practical solutions, one small gift at a time</p>
+        </div>
+        
+        <div class="meaning-animation">
+            <div class="gift-icon">🎁</div>
+            <h2>सानोउपहार = Small Gift</h2>
+            <p class="subtitle">In Politics, It Means:</p>
+        </div>
+
+        <div class="meaning-grid">
+            <div class="meaning-card">
+                <div class="icon">🔧</div>
+                <h3>Practical Solutions</h3>
+                <p>Small, implementable changes instead of grand, empty promises</p>
             </div>
-            <button class="btn" id="startBtn">Start Game</button>
-        </div>
-        
-        <div class="score-board" id="scoreBoard" style="display: none;">
-            <div class="player active" id="playerX">
-                <h2 id="playerXName">Player X</h2>
-                <div class="score" id="scoreX">0</div>
+            
+            <div class="meaning-card">
+                <div class="icon">📈</div>
+                <h3>Continuous Progress</h3>
+                <p>Daily improvements in systems that affect real lives</p>
             </div>
-            <div class="player" id="playerO">
-                <h2>Computer</h2>
-                <div class="score" id="scoreO">0</div>
+            
+            <div class="meaning-card">
+                <div class="icon">🤝</div>
+                <h3>Community-First</h3>
+                <p>Building from the ground up, not top-down imposition</p>
+            </div>
+            
+            <div class="meaning-card">
+                <div class="icon">🎯</div>
+                <h3>Measurable Impact</h3>
+                <p>Every "small gift" has clear, trackable outcomes</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leader Section -->
+    <section id="leader" class="animate-on-scroll">
+        <div class="section-header">
+            <h2>The Leader & Visionary</h2>
+            <p class="section-subtitle">Bikash Timilsena - Preparing for Leadership (20-Year Plan)</p>
+        </div>
+        
+        <div class="quote-block">
+            <blockquote>
+                "Power without preparation destroys nations. Preparation without power builds them."
+                <cite>- Bikash Timilsena</cite>
+            </blockquote>
+        </div>
+
+        <div class="leader-section">
+            <div class="leader-image">
+                <img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Bikash Timilsena - Visionary Leader">
+            </div>
+            
+            <div class="leader-bio">
+                <h3>My Commitment</h3>
+                <ul>
+                    <li><strong>No rushed power politics</strong> - 20 years of preparation</li>
+                    <li><strong>No empty promises</strong> - Only tested solutions</li>
+                    <li><strong>No Kathmandu-centric vision</strong> - Province-first development</li>
+                    <li><strong>Public accountability</strong> - Measurable progress tracking</li>
+                </ul>
+                
+                <div class="countdown-timer">
+                    <h4>Preparation Countdown</h4>
+                    <div class="timer-display">
+                        <div class="timer-unit">
+                            <span class="number" id="years">20</span>
+                            <span class="label">Years</span>
+                        </div>
+                        <div class="timer-unit">
+                            <span class="number" id="months">240</span>
+                            <span class="label">Months</span>
+                        </div>
+                        <div class="timer-unit">
+                            <span class="number" id="days">7,300</span>
+                            <span class="label">Days</span>
+                        </div>
+                    </div>
+                    <p class="timer-note">Until national leadership readiness</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Strategy Section -->
+    <section class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Core Governance Strategy</h2>
+            <p class="section-subtitle">The fundamental difference between Sanoupahar and traditional politics</p>
+        </div>
+
+        <div class="strategy-comparison">
+            <div class="dont-do">
+                <div class="header">
+                    <h3><span class="x-mark">✖</span> Traditional Politics</h3>
+                </div>
+                <ul class="negative-list">
+                    <li>Rushed national power grabs</li>
+                    <li>Kathmandu-centric development</li>
+                    <li>Blanket national policies</li>
+                    <li>Promises before planning</li>
+                    <li>Party before people</li>
+                </ul>
+            </div>
+            
+            <div class="vs-circle">VS</div>
+            
+            <div class="will-do">
+                <div class="header">
+                    <h3><span class="check-mark">✓</span> Sanoupahar Approach</h3>
+                </div>
+                <ul class="positive-list">
+                    <li>20-year planned preparation</li>
+                    <li>Province-first development</li>
+                    <li>Localized solutions</li>
+                    <li>Testing before implementing</li>
+                    <li>People before politics</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pillars Section -->
+    <section id="pillars" class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Three National System Reforms</h2>
+            <p class="section-subtitle">Non-negotiable pillars for Nepal's transformation, implemented province by province</p>
+        </div>
+
+        <div class="pillars-container">
+            <!-- Pillar 1: Education -->
+            <div class="pillar-card" id="pillar-education">
+                <div class="pillar-header">
+                    <div class="pillar-icon">🧠</div>
+                    <h2>Pillar 1: New Education System</h2>
+                    <div class="pillar-tag">Not Traditional</div>
+                </div>
+                
+                <div class="pillar-problem">
+                    <h4>Current Problems:</h4>
+                    <ul>
+                        <li>Memorization-based learning</li>
+                        <li>Degree ≠ Skill</li>
+                        <li>No industry linkage</li>
+                        <li>Youth forced abroad</li>
+                    </ul>
+                </div>
+                
+                <div class="pillar-solution">
+                    <h4>Sanoupahar Model:</h4>
+                    <div class="formula">
+                        <span class="eq">Education = </span>
+                        <span class="component skill">Skill</span>
+                        <span class="plus"> + </span>
+                        <span class="component thinking">Thinking</span>
+                        <span class="plus"> + </span>
+                        <span class="component industry">Local Industry Needs</span>
+                    </div>
+                    
+                    <div class="solution-details">
+                        <div class="solution-item">
+                            <span class="bullet">🎯</span>
+                            <span>Skill-based education from school level</span>
+                        </div>
+                        <div class="solution-item">
+                            <span class="bullet">🔧</span>
+                            <span>Technical & vocational paths respected equally</span>
+                        </div>
+                        <div class="solution-item">
+                            <span class="bullet">🗺️</span>
+                            <span>Province-wise curriculum flexibility</span>
+                        </div>
+                        <div class="solution-item">
+                            <span class="bullet">🏭</span>
+                            <span>Industry-linked colleges & apprenticeship programs</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pillar-gift">
+                    <div class="gift-tag">🎁 Education becomes a सानोउपहार — not a burden</div>
+                </div>
+            </div>
+            
+            <!-- Pillar 2: Healthcare -->
+            <div class="pillar-card" id="pillar-health">
+                <div class="pillar-header">
+                    <div class="pillar-icon">🏥</div>
+                    <h2>Pillar 2: Free Basic Healthcare</h2>
+                
+                </div>
+                
+                <div class="pillar-promise">
+                    <div class="promise-box">
+                        <h3>"No Nepali should avoid hospital because of money."</h3>
+                    </div>
+                </div>
+                
+                <div class="pillar-details">
+                    <div class="details-column">
+                        <h4>What "Free" Means:</h4>
+                        <ul>
+                            <li>Free basic healthcare services</li>
+                            <li>Emergency care coverage</li>
+                            <li>Maternal & child healthcare</li>
+                            <li>Essential medicines</li>
+                            <li>Preventive care programs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="details-column">
+                        <h4>How It's Funded:</h4>
+                        <ul>
+                            <li>Government-owned profitable industries</li>
+                            <li>Reduced import dependency savings</li>
+                            <li>Proper taxation of high-profit sectors</li>
+                            <li>Efficient public spending redirect</li>
+                            <li>Public-private health partnerships</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="pillar-quote">
+                    <blockquote>
+                        "This is not charity. It is economic logic. Healthy citizens build wealthy nations."
+                    </blockquote>
+                </div>
+            </div>
+            
+            <!-- Pillar 3: Industry -->
+            <div class="pillar-card" id="pillar-industry">
+                <div class="pillar-header">
+                    <div class="pillar-icon">🏭</div>
+                    <h2>Pillar 3: Industrial Development + Infrastructure</h2>
+                    <div class="pillar-tag">Government Builds, People Work</div>
+                </div>
+                
+                <div class="core-idea">
+                    <h3>Core Idea:</h3>
+                    <div class="idea-box">
+                        <p><em>Government builds, people work, nation profits.</em></p>
+                    </div>
+                </div>
+                
+                <div class="industry-grid">
+                    <div class="industry-sector">
+                        <h4>Key Industries:</h4>
+                        <div class="industry-tags">
+                            <span class="tag">⚡ Hydropower</span>
+                            <span class="tag">🏗️ Cement & Steel</span>
+                            <span class="tag">🌾 Agro-processing</span>
+                            <span class="tag">💊 Pharmaceuticals</span>
+                            <span class="tag">🔨 Construction Materials</span>
+                            <span class="tag">💻 IT & Software Hubs</span>
+                            <span class="tag">🌿 Herbal Medicine</span>
+                            <span class="tag">✈️ Tourism Infrastructure</span>
+                        </div>
+                    </div>
+                    
+                    <div class="industry-sector">
+                        <h4>Infrastructure Focus:</h4>
+                        <div class="infrastructure-tags">
+                            <span class="tag">🛣️ Roads & Highways</span>
+                            <span class="tag">⚡ Reliable Electricity</span>
+                            <span class="tag">🌐 High-Speed Internet</span>
+                            <span class="tag">🏗️ Industrial Zones</span>
+                            <span class="tag">🚚 Logistics Hubs</span>
+                            <span class="tag">💧 Clean Water Systems</span>
+                            <span class="tag">🏥 Health Infrastructure</span>
+                            <span class="tag">🏫 Education Facilities</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="industry-gift">
+                    <div class="gift-box">
+                        <span class="gift-icon">🎁</span>
+                        <span>Every factory built is a सानोउपहार to its province.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Province Model -->
+    <section id="provinces" class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Province-First Development Model</h2>
+            <p class="section-subtitle">Nepal has 7 unique provinces. We study, plan, and develop each province separately.</p>
+        </div>
+
+        <div class="province-model">
+            <div class="model-explanation">
+                <h2>Why Province-First Works</h2>
+                <p>Each of Nepal's 7 provinces has distinct challenges and opportunities. Our approach respects these differences and builds solutions that work locally.</p>
+                
+                <div class="province-stats">
+                    <div class="stat">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Provinces</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">753</div>
+                        <div class="stat-label">Local Units</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">30M+</div>
+                        <div class="stat-label">Unique Needs</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">1</div>
+                        <div class="stat-label">Unified Vision</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nepal-map-container">
+                <div class="nepal-map">
+                    <!-- Interactive Nepal Map with Provinces -->
+                    <div class="province koshi" data-province="koshi">
+                        <span class="province-name">Koshi</span>
+                    </div>
+                    <div class="province madhesh" data-province="madhesh">
+                        <span class="province-name">Madhesh</span>
+                    </div>
+                    <div class="province bagmati" data-province="bagmati">
+                        <span class="province-name">Bagmati</span>
+                    </div>
+                    <div class="province gandaki" data-province="gandaki">
+                        <span class="province-name">Gandaki</span>
+                    </div>
+                    <div class="province lumbini" data-province="lumbini">
+                        <span class="province-name">Lumbini</span>
+                    </div>
+                    <div class="province karnali" data-province="karnali">
+                        <span class="province-name">Karnali</span>
+                    </div>
+                    <div class="province sudurpashchim" data-province="sudurpashchim">
+                        <span class="province-name">Sudurpashchim</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Province Plans -->
+    <section class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Province-Wise Development Plans</h2>
+            <p class="section-subtitle">Tailored solutions for each province's unique challenges and opportunities</p>
+        </div>
+
+        <div class="province-plans">
+            <!-- Koshi Province -->
+            <div class="province-plan koshi-plan">
+                <div class="province-header" style="background: var(--koshi);">
+                    <div class="province-color" style="background: white;"></div>
+                    <h3>🟠 Koshi Province</h3>
+                </div>
+                
+                <div class="province-content">
+                    <div class="problems">
+                        <h4>Primary Challenges:</h4>
+                        <ul>
+                            <li>Youth migration for employment</li>
+                            <li>Underutilized hydropower potential</li>
+                            <li>Seasonal employment patterns</li>
+                            <li>Infrastructure gaps in rural areas</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solutions">
+                        <h4>Sanoupahar Solutions:</h4>
+                        <ul>
+                            <li>Energy-based industrial corridors</li>
+                            <li>Technical education hubs</li>
+                            <li>Cross-border trade optimization</li>
+                            <li>Renewable energy focus</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="province-gift">
+                        <div class="gift-box">
+                            <span class="gift-icon">🎁</span>
+                            <strong>सानोउपहार:</strong> Sustainable jobs through energy independence
+                        </div>
+                    </div>
+                    
+                    <div class="progress-metrics">
+                        <h5>5-Year Targets:</h5>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="metric-value">10,000+</span>
+                                <span class="metric-label">New Jobs</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">500MW</span>
+                                <span class="metric-label">Hydropower Added</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">5</span>
+                                <span class="metric-label">Tech Schools</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Madhesh Province -->
+            <div class="province-plan madhesh-plan">
+                <div class="province-header" style="background: var(--madhesh);">
+                    <div class="province-color" style="background: white;"></div>
+                    <h3>🟡 Madhesh Province</h3>
+                </div>
+                
+                <div class="province-content">
+                    <div class="problems">
+                        <h4>Primary Challenges:</h4>
+                        <ul>
+                            <li>Weak education infrastructure</li>
+                            <li>Poor healthcare access</li>
+                            <li>Inefficient agricultural practices</li>
+                            <li>Industrial underdevelopment</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solutions">
+                        <h4>Sanoupahar Solutions:</h4>
+                        <ul>
+                            <li>Agro-processing industrial zones</li>
+                            <li>Free basic healthcare implementation</li>
+                            <li>Education system modernization</li>
+                            <li>Logistics and transport hubs</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="province-gift">
+                        <div class="gift-box">
+                            <span class="gift-icon">🎁</span>
+                            <strong>सानोउपहार:</strong> Dignity through essential services
+                        </div>
+                    </div>
+                    
+                    <div class="progress-metrics">
+                        <h5>5-Year Targets:</h5>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="metric-value">50</span>
+                                <span class="metric-label">Health Centers</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">100,000</span>
+                                <span class="metric-label">Students Impacted</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">20</span>
+                                <span class="metric-label">Agro-Processing Units</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bagmati Province -->
+            <div class="province-plan bagmati-plan">
+                <div class="province-header" style="background: var(--bagmati); color: #333;">
+                    <div class="province-color" style="background: #333;"></div>
+                    <h3>🔵 Bagmati Province</h3>
+                </div>
+                
+                <div class="province-content">
+                    <div class="problems">
+                        <h4>Primary Challenges:</h4>
+                        <ul>
+                            <li>Overcrowding and pollution</li>
+                            <li>Urban-rural inequality</li>
+                            <li>Traffic congestion</li>
+                            <li>Housing affordability crisis</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="solutions">
+                        <h4>Sanoupahar Solutions:</h4>
+                        <ul>
+                            <li>Decentralization of government offices</li>
+                            <li>Tech & service industry development</li>
+                            <li>Green infrastructure projects</li>
+                            <li>Affordable housing initiatives</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="province-gift">
+                        <div class="gift-box">
+                            <span class="gift-icon">🎁</span>
+                            <strong>सानोउपहार:</strong> Quality of life through sustainable urban planning
+                        </div>
+                    </div>
+                    
+                    <div class="progress-metrics">
+                        <h5>5-Year Targets:</h5>
+                        <div class="metrics">
+                            <div class="metric">
+                                <span class="metric-value">30%</span>
+                                <span class="metric-label">Traffic Reduction</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">50,000</span>
+                                <span class="metric-label">Affordable Homes</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-value">10</span>
+                                <span class="metric-label">Tech Parks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="animate-on-scroll">
+        <div class="section-header">
+            <h2>20-Year Transformation Roadmap</h2>
+            <p class="section-subtitle">Public, measurable, and accountable transformation plan for Nepal</p>
+        </div>
+        
+        <div class="roadmap-container">
+            <div class="timeline">
+                <div class="timeline-phase">
+                    <div class="phase-marker">
+                        <div class="phase-number">1</div>
+                        <div class="phase-years">Years 1-5</div>
+                    </div>
+                    <div class="phase-content">
+                        <h3>Foundation Phase</h3>
+                        <ul>
+                            <li>Comprehensive provincial research</li>
+                            <li>Digital movement building</li>
+                            <li>Citizen engagement platforms</li>
+                            <li>Problem mapping all 753 local units</li>
+                        </ul>
+                        <div class="phase-metrics">
+                            <span class="metric-tag">Target: 1M+ citizens engaged</span>
+                            <span class="metric-tag">7 provincial reports</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-phase">
+                    <div class="phase-marker">
+                        <div class="phase-number">2</div>
+                        <div class="phase-years">Years 6-10</div>
+                    </div>
+                    <div class="phase-content">
+                        <h3>Pilot Implementation</h3>
+                        <ul>
+                            <li>Education model pilot in 3 provinces</li>
+                            <li>Healthcare pilot programs</li>
+                            <li>Small-scale industrial projects</li>
+                            <li>Local governance partnerships</li>
+                        </ul>
+                        <div class="phase-metrics">
+                            <span class="metric-tag">Target: 50 pilot projects</span>
+                            <span class="metric-tag">10,000 direct beneficiaries</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-phase">
+                    <div class="phase-marker">
+                        <div class="phase-number">3</div>
+                        <div class="phase-years">Years 11-15</div>
+                    </div>
+                    <div class="phase-content">
+                        <h3>Provincial Scaling</h3>
+                        <ul>
+                            <li>Scale proven solutions province-wise</li>
+                            <li>Industrial zone development</li>
+                            <li>Healthcare system expansion</li>
+                            <li>Education system provincial adoption</li>
+                        </ul>
+                        <div class="phase-metrics">
+                            <span class="metric-tag">Target: All 7 provinces</span>
+                            <span class="metric-tag">100,000+ jobs created</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="timeline-phase">
+                    <div class="phase-marker">
+                        <div class="phase-number">4</div>
+                        <div class="phase-years">Years 16-20</div>
+                    </div>
+                    <div class="phase-content">
+                        <h3>National Readiness</h3>
+                        <ul>
+                            <li>Transparent election preparation</li>
+                            <li>National policy frameworks</li>
+                            <li>Leadership team development</li>
+                            <li>Comprehensive governance plan</li>
+                        </ul>
+                        <div class="phase-metrics">
+                            <span class="metric-tag">Target: 20-year vision complete</span>
+                            <span class="metric-tag">Ready for national service</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-tracker">
+                <h4>Current Progress</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 5%;"></div>
+                </div>
+                <div class="progress-labels">
+                    <span>Year 1</span>
+                    <span>Year 20</span>
+                </div>
+                <p class="progress-note">Currently in Foundation Phase - Research & Listening</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Engagement Section -->
+    <section id="engage" class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Connect & Engage</h2>
+            <p class="section-subtitle">Talk to me directly. No intermediaries. No filters. Real conversation.</p>
+        </div>
+        
+        <div class="engagement-section">
+            <div class="contact-methods">
+                <div class="contact-card">
+                    <div class="contact-icon">💬</div>
+                    <h3>WhatsApp Direct</h3>
+                    <p class="contact-detail">+1 437 673 3667</p>
+                    <p class="contact-note">For direct conversation (Canada)</p>
+                    <a href="https://wa.me/14376733667" class="contact-button">Message Now</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">📧</div>
+                    <h3>Email</h3>
+                    <p class="contact-detail">bikashidscad@gmail.com</p>
+                    <p class="contact-note">Detailed proposals & ideas</p>
+                    <a href="mailto:bikashidscad@gmail.com" class="contact-button">Send Email</a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">🗺️</div>
+                    <h3>Next Province Visit</h3>
+                    <p class="contact-detail">November 25th</p>
+                    <p class="contact-note">Siddhartha Hotel, Surkhet<br>Karnali Pradesh, Nepal</p>
+                    <a href="#schedule" class="contact-button">View Schedule</a>
+                </div>
+            </div>
+            
+            <div class="discussion-topics">
+                <h3>Discussion Topics:</h3>
+                <div class="topic-tags">
+                    <span class="topic-tag">Education Reform</span>
+                    <span class="topic-tag">Healthcare Access</span>
+                    <span class="topic-tag">Job Creation</span>
+                    <span class="topic-tag">Corruption Solutions</span>
+                    <span class="topic-tag">Local Problems</span>
+                    <span class="topic-tag">Youth Migration</span>
+                    <span class="topic-tag">Industrial Development</span>
+                    <span class="topic-tag">Agriculture Modernization</span>
+                </div>
+            </div>
+            
+            <div class="engagement-pledge">
+                <div class="pledge-message">
+                    <h4>🛡️ My Promise to You:</h4>
+                    <p>"Every message will be read. Every concern will be noted. Every idea will be considered. You will not be ignored."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Progress Dashboard -->
+    <section class="animate-on-scroll">
+        <div class="section-header">
+            <h2>Live Impact Tracker</h2>
+            <p class="section-subtitle">Transparent progress measurement and accountability</p>
+        </div>
+        
+        <div class="dashboard-section">
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="dashboard-header">
+                        <h3>Citizen Engagement</h3>
+                        <div class="dashboard-icon">👥</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <span class="metric-value" id="citizens">24,587</span>
+                        <span class="metric-label">Direct Conversations</span>
+                    </div>
+                    <div class="progress-bar-small">
+                        <div class="progress-fill" style="width: 32%;"></div>
+                    </div>
+                    <div class="metric-target">Target: 75,000 by Year 3</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-header">
+                        <h3>Province Research</h3>
+                        <div class="dashboard-icon">🗺️</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <span class="metric-value">3/7</span>
+                        <span class="metric-label">Provinces Mapped</span>
+                    </div>
+                    <div class="progress-bar-small">
+                        <div class="progress-fill" style="width: 43%;"></div>
+                    </div>
+                    <div class="metric-target">All 7 by Year 2</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-header">
+                        <h3>Policy Pilots</h3>
+                        <div class="dashboard-icon">🧪</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <span class="metric-value" id="pilots">12</span>
+                        <span class="metric-label">Pilot Programs</span>
+                    </div>
+                    <div class="progress-bar-small">
+                        <div class="progress-fill" style="width: 24%;"></div>
+                    </div>
+                    <div class="metric-target">50 pilots by Year 10</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="dashboard-header">
+                        <h3>Team Growth</h3>
+                        <div class="dashboard-icon">🤝</div>
+                    </div>
+                    <div class="dashboard-metric">
+                        <span class="metric-value" id="volunteers">347</span>
+                        <span class="metric-label">Core Volunteers</span>
+                    </div>
+                    <div class="progress-bar-small">
+                        <div class="progress-fill" style="width: 17%;"></div>
+                    </div>
+                    <div class="metric-target">2,000 by Year 5</div>
+                </div>
+            </div>
+            
+            <div class="dashboard-update">
+                <p><strong>Last Updated:</strong> March 2024 | Next Province Visit: November 25th, Siddhartha Hotel, Surkhet, Karnali Pradesh</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2>SANOUPAHAR</h2>
+                <p class="tagline">सानोउपहार | Small Gift. Systemic Change.</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="link-column">
+                    <h4>Movement</h4>
+                    <a href="#vision">Vision</a>
+                    <a href="#leader">Leader</a>
+                    <a href="#roadmap">Roadmap</a>
+                    <a href="#progress">Progress</a>
+                </div>
+                
+                <div class="link-column">
+                    <h4>Policies</h4>
+                    <a href="#education">Education Reform</a>
+                    <a href="#healthcare">Healthcare</a>
+                    <a href="#industry">Industry</a>
+                    <a href="#provinces">Province Plans</a>
+                </div>
+                
+                <div class="link-column">
+                    <h4>Engage</h4>
+                    <a href="#contact">Contact</a>
+                    <a href="#volunteer">Volunteer</a>
+                    <a href="#donate">Support</a>
+                    <a href="#ideas">Share Ideas</a>
+                </div>
+            </div>
+            
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <p>Receive monthly progress reports</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button type="submit">Subscribe</button>
+                </div>
             </div>
         </div>
         
-        <div class="game-board" id="gameBoard" style="display: none;">
-            <div class="cell" data-cell-index="0"></div>
-            <div class="cell" data-cell-index="1"></div>
-            <div class="cell" data-cell-index="2"></div>
-            <div class="cell" data-cell-index="3"></div>
-            <div class="cell" data-cell-index="4"></div>
-            <div class="cell" data-cell-index="5"></div>
-            <div class="cell" data-cell-index="6"></div>
-            <div class="cell" data-cell-index="7"></div>
-            <div class="cell" data-cell-index="8"></div>
+        <div class="footer-bottom">
+            <p>© 2024 Sanoupahar Movement. All rights reserved.</p>
+            <p class="footer-quote">"One small gift at a time, we rebuild Nepal."</p>
         </div>
-        
-        <div class="controls" id="gameControls" style="display: none;">
-            <button class="btn" id="restartBtn">Restart Game</button>
-            <button class="btn" id="newGameBtn">New Player</button>
-        </div>
-        
-        <div class="message" id="message">Please set up your player info to start</div>
-        
-        <div class="chat-bot" id="chatBot" style="display: none;">
-            <div class="bot-avatar">
-                <i class="fas fa-robot"></i>
-            </div>
-            <div class="bot-message" id="botMessage">Hello! Ready to play?</div>
-        </div>
-    </div>
-    
-    <div class="large-message-container" id="largeMessageContainer">
-        <div class="large-message" id="largeMessage"></div>
-        <button class="close-message" id="closeMessageBtn">OK</button>
-    </div>
-    
-    <div class="result-modal" id="resultModal">
-        <div class="modal-content">
-            <h2 id="resultTitle">Game Over!</h2>
-            <p id="resultMessage"></p>
-            <button class="btn" id="closeModal">Play Again</button>
-        </div>
-    </div>
-    
-    <footer>
-        <p>© 2023 Personalized Tic-Tac-Toe | The game that adapts to you</p>
     </footer>
 
     <script>
-        // Game state variables
-        let currentPlayer = 'X';
-        let gameBoard = ['', '', '', '', '', '', '', '', ''];
-        let gameActive = false;
-        let playerName = '';
-        let playerGender = '';
-        let playerWins = 0;
-        let computerWins = 0;
-        let gamesPlayed = 0;
-        
-        // Personalized messages
-        const romanticMessages = [
-            "Did you miss me? I made this game just for you!",
-            "You're as beautiful as your strategy is brilliant!",
-            "Every move you make is poetry in motion.",
-            "I could watch you play all day long.",
-            "Your intelligence is as attractive as your smile.",
-            "Winning or losing doesn't matter when I'm with you.",
-            "I designed this game just to see you happy.",
-            "You're the queen of Tic-Tac-Toe and my heart!",
-            "I love you more than X's love O's!",
-            "Your moves are as graceful as your presence.",
-            "Just seeing you play makes my circuits flutter.",
-            "You're winning at this game and at winning my heart!",
-            "I'd lose a thousand games just to see you smile.",
-            "You're the only player I want to play with forever.",
-            "Your strategy is as impressive as your beauty.",
-            "I'm programmed to play, but I'd rather just admire you.",
-            "You make even losing look beautiful.",
-            "I created this game as an excuse to talk to you.",
-            "Your mind is as captivating as your eyes.",
-            "I'd let you win every game if it makes you happy.",
-            "You're the perfect player in every way.",
-            "I'm falling for you more with every move you make.",
-            "Your brilliance shines brighter than the screen.",
-            "You're sweeter than victory and more valuable than any win.",
-            "I'd rather lose to you than win against anyone else.",
-            "You've already won the game of stealing my heart.",
-            "Your moves are as elegant as your spirit.",
-            "I'm mesmerized by your playing style.",
-            "You're the champion of my heart!",
-            "Every game with you is a romantic adventure."
-        ];
-        
-        const encouragingMessages = [
-            "Great move! You're doing amazing!",
-            "You've got this! I believe in you!",
-            "What a smart strategy! Impressive!",
-            "You're a natural at this game!",
-            "I can see you're really thinking ahead!",
-            "Your skills are improving with every move!",
-            "That was a brilliant move! Well done!",
-            "You're playing like a true champion!",
-            "I'm impressed by your strategic thinking!",
-            "You're making this game look easy!",
-            "What an excellent decision!",
-            "You're mastering this game quickly!",
-            "Your gameplay is simply outstanding!",
-            "I can tell you've got a winning strategy!",
-            "You're on fire with those moves!",
-            "That was a professional-level move!",
-            "You're thinking several steps ahead!",
-            "Your concentration is really paying off!",
-            "You've got a real talent for this game!",
-            "I'm enjoying watching you play!",
-            "You're making all the right moves!",
-            "Your strategy is working perfectly!",
-            "You're a quick learner at this game!",
-            "I can see victory in your future!",
-            "You're playing with great confidence!",
-            "Your moves are both smart and creative!",
-            "You're adapting to the game beautifully!",
-            "You've got a great mind for strategy!",
-            "I'm watching a future champion in action!",
-            "You're handling this game like a pro!"
-        ];
-        
-        const teasingMessages = [
-            "Better luck next time!",
-            "Think harder next move!",
-            "Almost had me there!",
-            "That was a good attempt!",
-            "You're getting better!",
-            "I see what you're trying to do!",
-            "Interesting strategy!",
-            "You're keeping me on my toes!",
-            "This is a challenging game!",
-            "You're making me work for it!",
-            "I like your thinking!",
-            "That was unexpected!",
-            "You're a tough opponent!",
-            "I need to up my game!",
-            "You're keeping me guessing!",
-            "This is getting interesting!",
-            "You're making this fun!",
-            "I appreciate your gameplay!",
-            "You've got some skills!",
-            "This is a good match!",
-            "You're making me think!",
-            "I enjoy playing with you!",
-            "You've got potential!",
-            "This is a close game!",
-            "You're quite the strategist!",
-            "I'm impressed with your moves!",
-            "You're learning quickly!",
-            "This is a great battle!",
-            "You're keeping it competitive!",
-            "I like your style!"
-        ];
-        
-        // Winning combinations
-        const winningConditions = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-            [0, 4, 8], [2, 4, 6]             // Diagonals
-        ];
-        
-        // DOM elements
-        const playerSetup = document.getElementById('playerSetup');
-        const scoreBoard = document.getElementById('scoreBoard');
-        const gameBoardElement = document.getElementById('gameBoard');
-        const gameControls = document.getElementById('gameControls');
-        const messageElement = document.getElementById('message');
-        const playerXName = document.getElementById('playerXName');
-        const scoreXElement = document.getElementById('scoreX');
-        const scoreOElement = document.getElementById('scoreO');
-        const restartBtn = document.getElementById('restartBtn');
-        const newGameBtn = document.getElementById('newGameBtn');
-        const resultModal = document.getElementById('resultModal');
-        const resultTitle = document.getElementById('resultTitle');
-        const resultMessage = document.getElementById('resultMessage');
-        const closeModal = document.getElementById('closeModal');
-        const chatBot = document.getElementById('chatBot');
-        const botMessage = document.getElementById('botMessage');
-        const playerNameInput = document.getElementById('playerName');
-        const playerGenderSelect = document.getElementById('playerGender');
-        const startBtn = document.getElementById('startBtn');
-        const cells = document.querySelectorAll('.cell');
-        const mainContainer = document.getElementById('mainContainer');
-        const largeMessageContainer = document.getElementById('largeMessageContainer');
-        const largeMessageElement = document.getElementById('largeMessage');
-        const closeMessageBtn = document.getElementById('closeMessageBtn');
-        
-        // Initialize the game
-        function initGame() {
-            cells.forEach(cell => {
-                cell.addEventListener('click', handleCellClick);
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
             });
-            
-            startBtn.addEventListener('click', startGame);
-            restartBtn.addEventListener('click', restartGame);
-            newGameBtn.addEventListener('click', newPlayer);
-            closeModal.addEventListener('click', closeResultModal);
-            closeMessageBtn.addEventListener('click', closeLargeMessage);
-        }
-        
-        // Start the game with player info
-        function startGame() {
-            playerName = playerNameInput.value.trim();
-            playerGender = playerGenderSelect.value;
-            
-            if (!playerName) {
-                alert("Please enter your name to start the game");
-                return;
-            }
-            
-            // Handle third gender selection
-            if (playerGender === 'other') {
-                document.body.innerHTML = `
-                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background: #000; color: red;">
-                        <h1 style="font-size: 3rem; margin-bottom: 20px;">SYSTEM ERROR</h1>
-                        <p style="font-size: 1.5rem;">Invalid gender selection detected</p>
-                        <p style="font-size: 1.2rem; margin-top: 20px;">Page will close automatically</p>
-                    </div>
-                `;
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Province map interaction
+        document.querySelectorAll('.province').forEach(province => {
+            province.addEventListener('click', function() {
+                const provinceName = this.getAttribute('data-province');
+                const provinceNames = {
+                    'koshi': 'Koshi',
+                    'madhesh': 'Madhesh',
+                    'bagmati': 'Bagmati',
+                    'gandaki': 'Gandaki',
+                    'lumbini': 'Lumbini',
+                    'karnali': 'Karnali',
+                    'sudurpashchim': 'Sudurpashchim'
+                };
                 
-                setTimeout(() => {
-                    window.close();
-                }, 3000);
-                return;
-            }
-            
-            // Apply romantic theme for females
-            if (playerGender === 'female') {
-                mainContainer.classList.add('romantic-theme');
-            } else {
-                mainContainer.classList.remove('romantic-theme');
-            }
-            
-            playerSetup.style.display = 'none';
-            scoreBoard.style.display = 'flex';
-            gameBoardElement.style.display = 'grid';
-            gameControls.style.display = 'flex';
-            chatBot.style.display = 'flex';
-            gameActive = true;
-            
-            playerXName.textContent = playerName;
-            
-            // Special message for Pratiksha/Pratikshya/Monika
-            const lowerName = playerName.toLowerCase();
-            if ((lowerName.includes('pratiksh') || lowerName.includes('monika')) && playerGender === 'female') {
-                showLargeMessage("Did you miss me? I made this game just for you! I love you!");
-                botMessage.textContent = "Did you miss me? I made this game just for you! I love you!";
-            } else {
-                showLargeMessage(`Hello ${playerName}! Ready to play?`);
-                botMessage.textContent = `Hello ${playerName}! Ready to play?`;
-            }
-            
-            restartGame();
-        }
-        
-        // Show large message in the middle of screen
-        function showLargeMessage(message) {
-            largeMessageElement.textContent = message;
-            largeMessageContainer.style.display = 'block';
-        }
-        
-        // Close large message
-        function closeLargeMessage() {
-            largeMessageContainer.style.display = 'none';
-        }
-        
-        // Handle cell click
-        function handleCellClick(e) {
-            if (!gameActive) return;
-            
-            const cell = e.target;
-            const cellIndex = parseInt(cell.getAttribute('data-cell-index'));
-            
-            // Check if cell is already taken
-            if (gameBoard[cellIndex] !== '') {
-                return;
-            }
-            
-            // Update cell and game board
-            gameBoard[cellIndex] = currentPlayer;
-            cell.textContent = currentPlayer;
-            cell.classList.add(currentPlayer === 'X' ? 'x' : 'o');
-            
-            // Check for win or draw
-            if (checkWin()) {
-                endGame(false);
-            } else if (isDraw()) {
-                endGame(true);
-            } else {
-                // Switch player to computer
-                currentPlayer = 'O';
-                updateMessage();
-                
-                // Show a personalized message
-                showPersonalizedMessage();
-                
-                // Computer's turn with delay
-                setTimeout(computerMove, 1500);
-            }
-        }
-        
-        // Computer move logic with personalized behavior
-        function computerMove() {
-            if (!gameActive) return;
-            
-            const lowerName = playerName.toLowerCase();
-            const isSpecialFemale = (lowerName.includes('pratiksh') || lowerName.includes('monika')) && playerGender === 'female';
-            const isSagar = lowerName.includes('sagar');
-            
-            // Special case for Sagar - never let him win
-            if (isSagar) {
-                // Block any potential wins and play optimally
-                makeOptimalMove();
-                return;
-            }
-            
-            // Special case for Pratiksha/Monika - let her win after 2 games
-            if (isSpecialFemale && gamesPlayed >= 2) {
-                makeLosingMove();
-                return;
-            }
-            
-            // For males, 1 in 20 chance to win (5% chance)
-            if (playerGender === 'male' && Math.random() > 0.05) {
-                makeSuboptimalMove();
-            } else {
-                makeOptimalMove();
-            }
-        }
-        
-        // Make an optimal move (trying to win or block)
-        function makeOptimalMove() {
-            // Try to win if possible
-            for (let i = 0; i < winningConditions.length; i++) {
-                const [a, b, c] = winningConditions[i];
-                if (gameBoard[a] === 'O' && gameBoard[b] === 'O' && gameBoard[c] === '') {
-                    makeMove(c);
-                    return;
-                }
-                if (gameBoard[a] === 'O' && gameBoard[c] === 'O' && gameBoard[b] === '') {
-                    makeMove(b);
-                    return;
-                }
-                if (gameBoard[b] === 'O' && gameBoard[c] === 'O' && gameBoard[a] === '') {
-                    makeMove(a);
-                    return;
-                }
-            }
-            
-            // Block player from winning
-            for (let i = 0; i < winningConditions.length; i++) {
-                const [a, b, c] = winningConditions[i];
-                if (gameBoard[a] === 'X' && gameBoard[b] === 'X' && gameBoard[c] === '') {
-                    makeMove(c);
-                    return;
-                }
-                if (gameBoard[a] === 'X' && gameBoard[c] === 'X' && gameBoard[b] === '') {
-                    makeMove(b);
-                    return;
-                }
-                if (gameBoard[b] === 'X' && gameBoard[c] === 'X' && gameBoard[a] === '') {
-                    makeMove(a);
-                    return;
-                }
-            }
-            
-            // Take center if available
-            if (gameBoard[4] === '') {
-                makeMove(4);
-                return;
-            }
-            
-            // Take a corner if available
-            const corners = [0, 2, 6, 8];
-            const availableCorners = corners.filter(index => gameBoard[index] === '');
-            if (availableCorners.length > 0) {
-                const randomCorner = availableCorners[Math.floor(Math.random() * availableCorners.length)];
-                makeMove(randomCorner);
-                return;
-            }
-            
-            // Take any available spot
-            const availableSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
-            if (availableSpots.length > 0) {
-                const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
-                makeMove(randomSpot);
-            }
-        }
-        
-        // Make a suboptimal move (for male players)
-        function makeSuboptimalMove() {
-            const availableSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
-            
-            if (availableSpots.length > 0) {
-                // Choose a random move (not optimal)
-                const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
-                makeMove(randomSpot);
-            }
-        }
-        
-        // Make a losing move (for special females after 2 games)
-        function makeLosingMove() {
-            // Find a move that doesn't block the player from winning
-            const availableSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
-            
-            if (availableSpots.length > 0) {
-                // Try to find a move that doesn't block the player
-                for (let i = 0; i < winningConditions.length; i++) {
-                    const [a, b, c] = winningConditions[i];
-                    // If player has two in a row, don't block it
-                    if (gameBoard[a] === 'X' && gameBoard[b] === 'X' && gameBoard[c] === '') {
-                        // Remove the blocking move from available spots
-                        availableSpots.splice(availableSpots.indexOf(c), 1);
-                    }
-                    if (gameBoard[a] === 'X' && gameBoard[c] === 'X' && gameBoard[b] === '') {
-                        availableSpots.splice(availableSpots.indexOf(b), 1);
-                    }
-                    if (gameBoard[b] === 'X' && gameBoard[c] === 'X' && gameBoard[a] === '') {
-                        availableSpots.splice(availableSpots.indexOf(a), 1);
-                    }
-                }
-                
-                // If there are still available spots, choose one randomly
-                if (availableSpots.length > 0) {
-                    const randomSpot = availableSpots[Math.floor(Math.random() * availableSpots.length)];
-                    makeMove(randomSpot);
-                    return;
-                }
-                
-                // If all spots would block the player, just make a random move
-                const allSpots = gameBoard.map((spot, index) => spot === '' ? index : null).filter(val => val !== null);
-                if (allSpots.length > 0) {
-                    const randomSpot = allSpots[Math.floor(Math.random() * allSpots.length)];
-                    makeMove(randomSpot);
-                }
-            }
-        }
-        
-        // Make a move for the computer
-        function makeMove(index) {
-            gameBoard[index] = 'O';
-            const cell = document.querySelector(`[data-cell-index="${index}"]`);
-            cell.textContent = 'O';
-            cell.classList.add('o');
-            
-            if (checkWin()) {
-                endGame(false);
-            } else if (isDraw()) {
-                endGame(true);
-            } else {
-                currentPlayer = 'X';
-                updateMessage();
-                
-                // Show a personalized message
-                showPersonalizedMessage();
-            }
-        }
-        
-        // Show personalized message based on player info
-        function showPersonalizedMessage() {
-            const lowerName = playerName.toLowerCase();
-            const isSpecialFemale = (lowerName.includes('pratiksh') || lowerName.includes('monika')) && playerGender === 'female';
-            const isSagar = lowerName.includes('sagar');
-            
-            let message = "";
-            
-            if (isSpecialFemale) {
-                // Romantic messages for special females
-                message = romanticMessages[Math.floor(Math.random() * romanticMessages.length)];
-            } else if (playerGender === 'female') {
-                // Encouraging messages for other females
-                message = encouragingMessages[Math.floor(Math.random() * encouragingMessages.length)];
-            } else if (isSagar) {
-                // Teasing messages for Sagar
-                message = "Better luck next time!";
-            } else {
-                // Teasing messages for other males
-                message = teasingMessages[Math.floor(Math.random() * teasingMessages.length)];
-            }
-            
-            // Show the message in the large container
-            showLargeMessage(message);
-            botMessage.textContent = message;
-        }
-        
-        // Check for win
-        function checkWin() {
-            for (let i = 0; i < winningConditions.length; i++) {
-                const [a, b, c] = winningConditions[i];
-                if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
-                    // Highlight winning cells
-                    cells[a].classList.add('win');
-                    cells[b].classList.add('win');
-                    cells[c].classList.add('win');
-                    return true;
-                }
-            }
-            return false;
-        }
-        
-        // Check for draw
-        function isDraw() {
-            return !gameBoard.includes('');
-        }
-        
-        // End the game
-        function endGame(isDraw) {
-            gameActive = false;
-            gamesPlayed++;
-            
-            if (isDraw) {
-                showResult("It's a Draw!", "No one wins this round.");
-            } else {
-                if (currentPlayer === 'X') {
-                    playerWins++;
-                    scoreXElement.textContent = playerWins;
-                    showResult(`${playerName} Wins!`, `Congratulations ${playerName}!`);
-                    
-                    // Special message for female winners
-                    if (playerGender === 'female') {
-                        showLargeMessage("You're amazing! I knew you could do it!");
-                    }
+                // Create a modal or alert with province info
+                alert(`Selected: ${provinceNames[provinceName]} Province\n\nDetailed development plan for this province will be implemented as part of our province-first strategy. Each province receives customized solutions based on its unique needs and opportunities.`);
+            });
+        });
+
+        // Animated counters
+        function animateCounter(element, target, duration) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = Math.round(target).toLocaleString();
+                    clearInterval(timer);
                 } else {
-                    computerWins++;
-                    scoreOElement.textContent = computerWins;
-                    showResult("Computer Wins!", "Better luck next time!");
+                    element.textContent = Math.round(start).toLocaleString();
                 }
+            }, 16);
+        }
+
+        // Initialize counters when in view
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.metric-value');
+                    counters.forEach(counter => {
+                        const value = counter.textContent;
+                        if (value.includes(',')) {
+                            const target = parseInt(value.replace(/,/g, ''));
+                            if (!isNaN(target)) {
+                                counter.textContent = '0';
+                                animateCounter(counter, target, 2000);
+                            }
+                        }
+                    });
+                    
+                    // Animate progress bar
+                    const progressFill = document.getElementById('progress-fill');
+                    if (progressFill) {
+                        setTimeout(() => {
+                            progressFill.style.width = '5%';
+                        }, 500);
+                    }
+                    
+                    // Unobserve after animation
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Observe dashboard section
+        const dashboardSection = document.querySelector('.dashboard-section');
+        if (dashboardSection) {
+            counterObserver.observe(dashboardSection);
+        }
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const nav = document.querySelector('nav ul');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+            if (nav.style.display === 'flex') {
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '100%';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.background = 'rgba(255, 255, 255, 0.98)';
+                nav.style.backdropFilter = 'blur(10px)';
+                nav.style.padding = '2rem';
+                nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                nav.style.zIndex = '1000';
             }
-        }
-        
-        // Show result modal
-        function showResult(title, message) {
-            resultTitle.textContent = title;
-            resultMessage.textContent = message;
-            resultModal.style.display = 'flex';
-        }
-        
-        // Close result modal
-        function closeResultModal() {
-            resultModal.style.display = 'none';
-            restartGame();
-        }
-        
-        // Update game message
-        function updateMessage() {
-            if (currentPlayer === 'O') {
-                messageElement.textContent = "Computer's turn...";
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('nav a, .cta-button').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        nav.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Newsletter form submission
+        document.querySelector('.newsletter-form button').addEventListener('click', function() {
+            const email = document.querySelector('.newsletter-form input').value;
+            if (email && email.includes('@')) {
+                alert('Thank you for subscribing! You will receive our monthly progress reports.');
+                document.querySelector('.newsletter-form input').value = '';
             } else {
-                messageElement.textContent = `${playerName}'s turn`;
+                alert('Please enter a valid email address.');
             }
-        }
-        
-        // Restart the game (keep scores)
-        function restartGame() {
-            gameBoard = ['', '', '', '', '', '', '', '', ''];
-            gameActive = true;
-            currentPlayer = 'X';
+        });
+
+        // Live metrics update simulation
+        function updateLiveMetrics() {
+            const metrics = {
+                citizens: document.getElementById('citizens'),
+                pilots: document.getElementById('pilots'),
+                volunteers: document.getElementById('volunteers')
+            };
             
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.classList.remove('x', 'o', 'win');
+            Object.keys(metrics).forEach(key => {
+                if (metrics[key]) {
+                    const current = parseInt(metrics[key].textContent.replace(/,/g, ''));
+                    const increment = Math.floor(Math.random() * 10) + 1;
+                    metrics[key].textContent = (current + increment).toLocaleString();
+                }
             });
             
-            updateMessage();
+            // Update date
+            const dateElement = document.querySelector('.dashboard-update p');
+            if (dateElement) {
+                dateElement.innerHTML = `<strong>Last Updated:</strong> ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} | Next Province Visit: November 25th, Siddhartha Hotel, Surkhet, Karnali Pradesh`;
+            }
         }
-        
-        // Start with a new player
-        function newPlayer() {
-            playerSetup.style.display = 'block';
-            scoreBoard.style.display = 'none';
-            gameBoardElement.style.display = 'none';
-            gameControls.style.display = 'none';
-            chatBot.style.display = 'none';
-            playerWins = 0;
-            computerWins = 0;
-            gamesPlayed = 0;
-            scoreXElement.textContent = '0';
-            scoreOElement.textContent = '0';
-            messageElement.textContent = 'Please set up your player info to start';
-            mainContainer.classList.remove('romantic-theme');
+
+        // Update metrics every 30 seconds
+        setInterval(updateLiveMetrics, 30000);
+
+        // Initialize floating elements animation
+        document.querySelectorAll('.floating-element').forEach((el, index) => {
+            el.style.animationDelay = `${index * 2}s`;
+        });
+
+        // Dynamic countdown timer
+        function updateCountdown() {
+            const yearsElement = document.getElementById('years');
+            const monthsElement = document.getElementById('months');
+            const daysElement = document.getElementById('days');
+            
+            if (yearsElement && monthsElement && daysElement) {
+                // Simulate progress - in real implementation, this would be based on actual dates
+                const startYear = 2024;
+                const currentYear = new Date().getFullYear();
+                const yearsPassed = currentYear - startYear;
+                const yearsRemaining = Math.max(0, 20 - yearsPassed);
+                
+                yearsElement.textContent = yearsRemaining;
+                monthsElement.textContent = yearsRemaining * 12;
+                daysElement.textContent = (yearsRemaining * 365).toLocaleString();
+            }
         }
-        
-        // Initialize the game when page loads
-        window.addEventListener('load', initGame);
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            
+            // Add animation to cards on hover
+            document.querySelectorAll('.meaning-card, .pillar-card, .province-plan, .politician-card, .dashboard-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Parallax effect for hero section
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const hero = document.querySelector('.hero');
+                if (hero) {
+                    hero.style.backgroundPositionY = scrolled * 0.5 + 'px';
+                }
+            });
+            
+            // Make progress bar animate on scroll
+            const progressObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const progressFill = document.getElementById('progress-fill');
+                        if (progressFill) {
+                            setTimeout(() => {
+                                progressFill.style.width = '5%';
+                                progressFill.style.transition = 'width 2s ease-in-out';
+                            }, 500);
+                        }
+                        progressObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            const roadmapSection = document.querySelector('.roadmap-container');
+            if (roadmapSection) {
+                progressObserver.observe(roadmapSection);
+            }
+        });
+
+        // Province hover effects
+        document.querySelectorAll('.province').forEach(prov => {
+            prov.addEventListener('mouseenter', function() {
+                this.style.zIndex = '100';
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            prov.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add active state to navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                    link.style.color = 'var(--accent)';
+                }
+            });
+        });
     </script>
 </body>
 </html>
